@@ -38,9 +38,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for development - enable in production
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/users/register", "/api/users/login", "/api/users/logout").permitAll()
+                .requestMatchers("/api/users/fix-admin-bcrypt", "/api/users/debug-admin-detailed").permitAll()
                 .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/users/**").authenticated()
                 .anyRequest().permitAll()

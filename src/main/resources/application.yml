@@ -35,3 +35,11 @@ spring:
 logging:
   level:
     com.bbzbl.flowerbouquet: DEBUG
+
+app:
+  admin:
+    firstname: Admin
+    lastname: User
+    # DO NOT put username, password, or email here in production!
+  create:
+    admin: true
