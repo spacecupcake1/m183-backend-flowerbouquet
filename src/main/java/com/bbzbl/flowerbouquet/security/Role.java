@@ -3,6 +3,7 @@ package com.bbzbl.flowerbouquet.security;
 import java.util.Collection;
 
 import com.bbzbl.flowerbouquet.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +35,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore  // Ignore to prevent circular reference
     private Collection<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER)

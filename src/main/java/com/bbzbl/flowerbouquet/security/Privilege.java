@@ -2,6 +2,8 @@ package com.bbzbl.flowerbouquet.security;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
+    @JsonIgnore  // Ignore to prevent circular reference
     private Collection<Role> roles;
 
     public Privilege(String name) {

@@ -1,101 +1,132 @@
 package com.bbzbl.flowerbouquet.flower;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
-@Configuration
-public class FlowerInitializer {
+/**
+ * Initializes the database with sample flower data.
+ * This class implements CommandLineRunner to run after the application starts.
+ */
+@Component
+public class FlowerInitializer implements CommandLineRunner {
 
     @Autowired
     private FlowerService flowerService;
 
-    @Bean
-    CommandLineRunner initDatabase() {
-        return args -> {
+    @Override
+    public void run(String... args) throws Exception {
+        // Only initialize if no flowers exist
+        if (flowerService.getFlowerCount() == 0) {
             System.out.println("Initializing database with flowers");
+            initializeFlowers();
+        } else {
+            System.out.println("Database already contains flowers, skipping initialization");
+        }
+    }
 
-            flowerService.addFlowers(Arrays.asList(
-                new Flower(null, "Rose", "Love and Passion", "yes",
-                    "Roses are one of the most popular flowers in the world. They come in various colors and each color has its own meaning.",
-                    "Red", 10, "/images/Rose.jpg"),
-                new Flower(null, "Tulip", "Perfect Love", "yes",
-                    "Tulips are a symbol of perfect love. They are often associated with the Netherlands.",
-                    "Yellow", 8, "/images/Tulip.jpg"),
-                new Flower(null, "Lily", "Purity and Refined Beauty", "no",
-                    "Lilies are known for their large, prominent flowers and pleasant fragrance.",
-                    "White", 12, "/images/Lily.jpg"),
-                // Add other flowers similarly
-                new Flower(null, "Daisy", "Innocence and Purity", "yes",
-                    "Daisies are simple yet sophisticated flowers that symbolize innocence and purity.",
-                    "White", 5, "/images/Daisy.jpg"),
-                new Flower(null, "Orchid", "Beauty and Strength", "yes",
-                    "Orchids are exotic flowers that represent beauty, strength, and luxury.",
-                    "Purple", 15, "/images/Orchid.jpg"),
-                new Flower(null, "Sunflower", "Adoration and Loyalty", "yes",
-                    "Sunflowers are known for their large size and bright yellow petals, symbolizing adoration and loyalty.",
-                    "Yellow", 7, "/images/Sunflower.jpg"),
-                new Flower(null, "Peony", "Romance and Prosperity", "no",
-                    "Peonies are lush, full flowers that are often used in wedding bouquets.",
-                    "Pink", 20, "/images/Peony.jpg"),
-                new Flower(null, "Carnation", "Love and Fascination", "yes",
-                    "Carnations are versatile flowers with a ruffled appearance, symbolizing love and fascination.",
-                    "Red", 6, "/images/Carnation.jpg"),
-                new Flower(null, "Chrysanthemum", "Joy and Optimism", "no",
-                    "Chrysanthemums are bright, cheerful flowers that bloom in a variety of colors.",
-                    "Orange", 9, "/images/Chrysanthemum.jpg"),
-                new Flower(null, "Hydrangea", "Gratitude and Grace", "yes",
-                    "Hydrangeas are large, round flowers that come in many colors, representing gratitude and grace.",
-                    "Blue", 18, "/images/Hydrangea.jpg"),
-                new Flower(null, "Lavender", "Calm and Serenity", "no",
-                    "Lavender is known for its soothing fragrance and is often used in aromatherapy.",
-                    "Purple", 10, "/images/Lavender.jpg"),
-                new Flower(null, "Marigold", "Passion and Creativity", "yes",
-                    "Marigolds are bright flowers that symbolize passion and creativity.",
-                    "Orange", 4, "/images/Marigold.jpg"),
-                new Flower(null, "Iris", "Wisdom and Valor", "yes",
-                    "Irises are named after the Greek goddess Iris and represent wisdom and valor.",
-                    "Blue", 11, "/images/Iris.jpg"),
-                new Flower(null, "Daffodil", "Rebirth and New Beginnings", "no",
-                    "Daffodils are bright yellow flowers that symbolize rebirth and new beginnings.",
-                    "Yellow", 5, "/images/Daffodil.jpg"),
-                new Flower(null, "Anemone", "Protection and Anticipation", "yes",
-                    "Anemones are delicate flowers that are often associated with protection and anticipation.",
-                    "Red", 8, "/images/Anemone.jpg"),
-                new Flower(null, "Bluebell", "Humility and Gratitude", "yes",
-                    "Bluebells are small, bell-shaped flowers that symbolize humility and gratitude.",
-                    "Blue", 9, "/images/Bluebell.jpg"),
-                new Flower(null, "Gardenia", "Purity and Sweetness", "no",
-                    "Gardenias are fragrant, white flowers that represent purity and sweetness.",
-                    "White", 12, "/images/Gardenia.jpg"),
-                new Flower(null, "Camellia", "Adoration and Devotion", "yes",
-                    "Camellias are beautiful, layered flowers that symbolize adoration and devotion.",
-                    "Pink", 13, "/images/Camellia.jpg"),
-                new Flower(null, "Poppy", "Remembrance and Imagination", "no",
-                    "Poppies are vibrant flowers that are often associated with remembrance and imagination.",
-                    "Red", 6, "/images/Poppy.jpg"),
-                new Flower(null, "Zinnia", "Lasting Affection", "yes",
-                    "Zinnias are bright, cheerful flowers that symbolize lasting affection.",
-                    "Mixed", 7, "/images/Zinnia.jpg"),
-                new Flower(null, "Begonia", "Cordiality", "no",
-                    "Begonias are known for their bright colors and symbolize cordiality.",
-                    "Pink", 9, "/images/Begonia.jpg"),
-                new Flower(null, "Cosmos", "Harmony and Peace", "yes",
-                    "Cosmos are daisy-like flowers that represent harmony and peace.",
-                    "Pink", 8, "/images/Cosmos.jpg"),
-                new Flower(null, "Dahlia", "Elegance and Dignity", "no",
-                    "Dahlias are bushy, tuberous flowers that symbolize elegance and dignity.",
-                    "Purple", 14, "/images/Dahlia.jpg"),
-                new Flower(null, "Freesia", "Innocence and Friendship", "yes",
-                    "Freesias are fragrant flowers that represent innocence and friendship.",
-                    "White", 10, "/images/Freesia.jpg"),
-                new Flower(null, "Gladiolus", "Strength and Integrity", "no",
-                    "Gladiolus are tall flowers that symbolize strength and integrity.",
-                    "Red", 7, "/images/Gladiolus.jpg")
-            ));
-        };
+    private void initializeFlowers() {
+        List<Flower> flowers = Arrays.asList(
+            new Flower(null, 
+                "Rose", 
+                "Symbol of love and passion", 
+                "Available", 
+                "Classic red roses are perfect for expressing deep love and romantic feelings. These beautiful flowers have been cherished for centuries.", 
+                "Red", 
+                25, 
+                "https://images.unsplash.com/photo-1518895949257-7621c3c786d7"),
+            
+            new Flower(null, 
+                "Tulip", 
+                "Symbol of perfect love and elegance", 
+                "Available", 
+                "Elegant tulips represent perfect love and are associated with spring and new beginnings. Available in many beautiful colors.", 
+                "Yellow", 
+                15, 
+                "https://images.unsplash.com/photo-1520637836862-4d197d17c91a"),
+            
+            new Flower(null, 
+                "Sunflower", 
+                "Symbol of loyalty and devotion", 
+                "Available", 
+                "Bright and cheerful sunflowers represent loyalty, devotion, and adoration. Their large, vibrant blooms bring joy to any bouquet.", 
+                "Yellow", 
+                20, 
+                "https://images.unsplash.com/photo-1597848212624-e7ddc00f9b6e"),
+            
+            new Flower(null, 
+                "Lily", 
+                "Symbol of purity and rebirth", 
+                "Available", 
+                "Elegant lilies symbolize purity, rebirth, and motherhood. These sophisticated flowers are perfect for special occasions.", 
+                "White", 
+                30, 
+                "https://images.unsplash.com/photo-1544889304-647743d0a0b8"),
+            
+            new Flower(null, 
+                "Carnation", 
+                "Symbol of fascination and distinction", 
+                "Available", 
+                "Carnations represent fascination, distinction, and love. These long-lasting flowers come in many colors and are perfect for arrangements.", 
+                "Pink", 
+                12, 
+                "https://images.unsplash.com/photo-1582794543249-1e6ba4fb2103"),
+            
+            new Flower(null, 
+                "Daisy", 
+                "Symbol of innocence and new beginnings", 
+                "Available", 
+                "Sweet daisies represent innocence, new beginnings, and true love. These cheerful flowers bring a sense of freshness to any bouquet.", 
+                "White", 
+                10, 
+                "https://images.unsplash.com/photo-1574684891174-df6b02ab38d7"),
+            
+            new Flower(null, 
+                "Orchid", 
+                "Symbol of luxury and strength", 
+                "Unavailable", 
+                "Exotic orchids represent luxury, strength, and beauty. These sophisticated flowers are highly prized for their unique appearance.", 
+                "Purple", 
+                50, 
+                "https://images.unsplash.com/photo-1553406830-ef2513450d76"),
+            
+            new Flower(null, 
+                "Peony", 
+                "Symbol of honor and wealth", 
+                "Available", 
+                "Luxurious peonies symbolize honor, wealth, and a happy life. These full, fragrant flowers are perfect for creating stunning arrangements.", 
+                "Pink", 
+                40, 
+                "https://images.unsplash.com/photo-1588840647282-e3d1a3b4da5e"),
+            
+            new Flower(null, 
+                "Iris", 
+                "Symbol of wisdom and valor", 
+                "Available", 
+                "Elegant irises represent wisdom, valor, and faith. These distinctive flowers add sophistication to any floral arrangement.", 
+                "Blue", 
+                22, 
+                "https://images.unsplash.com/photo-1566207474742-de921626ad0c"),
+            
+            new Flower(null, 
+                "Hydrangea", 
+                "Symbol of gratitude and understanding", 
+                "Available", 
+                "Beautiful hydrangeas represent heartfelt gratitude and understanding. These full, rounded blooms create stunning focal points in arrangements.", 
+                "Blue", 
+                35, 
+                "https://images.unsplash.com/photo-1592717147028-62589b25d0bd")
+        );
+
+        try {
+            flowerService.addFlowers(flowers);
+            System.out.println("Successfully initialized " + flowers.size() + " flowers in the database");
+        } catch (Exception e) {
+            System.err.println("Error initializing flowers: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
