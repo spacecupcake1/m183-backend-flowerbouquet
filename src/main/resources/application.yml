@@ -10,9 +10,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:flowershop
     driver-class-name: org.h2.Driver
-    username: sa
+    username: admin
     password: 
     
   jpa:
@@ -26,7 +26,7 @@ spring:
   
   h2:
     console:
-      enabled: false  # DISABLE H2 CONSOLE IN PRODUCTION
+      enabled: true  # DISABLE H2 CONSOLE IN PRODUCTION
 
 # Logging configuration
 logging:

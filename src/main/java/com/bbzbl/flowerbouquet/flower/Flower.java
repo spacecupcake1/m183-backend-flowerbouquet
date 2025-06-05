@@ -1,7 +1,5 @@
 package com.bbzbl.flowerbouquet.flower;
 
-import org.hibernate.validator.constraints.URL;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -69,9 +67,13 @@ public class Flower {
     @Max(value = 9999, message = "Price cannot exceed 9999")
     private int price;
     
+    // FIXED: Removed @URL annotation and updated pattern to allow relative paths
     @Column(length = 500, nullable = false)
     @NotBlank(message = "Image URL is required")
     @Size(max = 500, message = "Image URL cannot exceed 500 characters")
-    @URL(message = "Image URL must be a valid URL")
+    @Pattern(
+        regexp = "^(https?://.*|images/[a-zA-Z0-9._-]+\\.(jpg|jpeg|png|gif|webp|svg))$", 
+        message = "Image URL must be a valid HTTP/HTTPS URL or relative path like 'images/filename.jpg'"
+    )
     private String imageUrl;
 }
