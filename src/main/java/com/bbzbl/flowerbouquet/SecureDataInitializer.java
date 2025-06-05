@@ -15,8 +15,7 @@ import com.bbzbl.flowerbouquet.user.User;
 import com.bbzbl.flowerbouquet.user.UserRepository;
 
 /**
- * TEMPORARY VERSION with hardcoded fallback for debugging.
- * REMOVE HARDCODED CREDENTIALS BEFORE PRODUCTION!
+ * PRODUCTION SECURE VERSION - NO CREDENTIAL LOGGING
  */
 @Component
 public class SecureDataInitializer implements CommandLineRunner {
@@ -30,7 +29,6 @@ public class SecureDataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    // Environment variables for admin credentials
     @Value("${app.admin.username:#{null}}")
     private String adminUsername;
     
@@ -39,23 +37,28 @@ public class SecureDataInitializer implements CommandLineRunner {
     
     @Value("${app.admin.email:#{null}}")
     private String adminEmail;
+    
+    @Value("${app.admin.firstname:Admin}")
+    private String adminFirstname;
+    
+    @Value("${app.admin.lastname:User}")
+    private String adminLastname;
+    
+    @Value("${app.create.admin:true}")
+    private boolean createAdmin;
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("=== Starting Secure Data Initialization (DEBUG VERSION) ===");
-        
-        // Debug environment variables
-        System.out.println("Environment variables check:");
-        System.out.println("  APP_ADMIN_USERNAME: " + (adminUsername != null ? adminUsername : "NOT SET"));
-        System.out.println("  APP_ADMIN_PASSWORD: " + (adminPassword != null ? "[SET - length: " + adminPassword.length() + "]" : "NOT SET"));
-        System.out.println("  APP_ADMIN_EMAIL: " + (adminEmail != null ? adminEmail : "NOT SET"));
+        System.out.println("=== Starting Data Initialization ===");
         
         // Create default roles
         Role userRole = createRoleIfNotExists("ROLE_USER");
         Role adminRole = createRoleIfNotExists("ROLE_ADMIN");
 
-        // Create admin user with fallback
-        createAdminUserWithFallback(userRole, adminRole);
+        // Create or fix admin user
+        if (createAdmin) {
+            createOrFixAdminUser(userRole, adminRole);
+        }
         
         System.out.println("=== Data Initialization Complete ===");
     }
@@ -72,71 +75,46 @@ public class SecureDataInitializer implements CommandLineRunner {
         return role;
     }
     
-    private void createAdminUserWithFallback(Role userRole, Role adminRole) {
-        // Check if any admin already exists
-        Optional<User> existingAdmin = findExistingAdmin();
-        if (existingAdmin.isPresent()) {
-            System.out.println("✓ Admin user already exists: " + existingAdmin.get().getUsername());
+    private void createOrFixAdminUser(Role userRole, Role adminRole) {
+        if (adminUsername == null || adminPassword == null) {
+            System.out.println("⚠️ Admin credentials not provided via environment variables");
             return;
         }
         
-        // Try environment variables first
-        if (adminUsername != null && adminPassword != null) {
-            System.out.println("✅ Using admin credentials from environment variables");
-            createAdminUser(adminUsername, adminPassword, adminEmail, userRole, adminRole);
-            return;
-        }
-        
-        // TEMPORARY FALLBACK - REMOVE IN PRODUCTION!
-        System.out.println("⚠️ Environment variables not set, using temporary fallback credentials");
-        System.out.println("⚠️ THIS IS FOR DEBUGGING ONLY - REMOVE BEFORE PRODUCTION!");
-        
-        String fallbackUsername = "admin";
-        String fallbackPassword = "admin123";
-        String fallbackEmail = "admin@temp.com";
-        
-        createAdminUser(fallbackUsername, fallbackPassword, fallbackEmail, userRole, adminRole);
-        
-        System.out.println("🔑 TEMPORARY ADMIN CREDENTIALS:");
-        System.out.println("   Username: " + fallbackUsername);
-        System.out.println("   Password: " + fallbackPassword);
-        System.out.println("   *** CHANGE THESE CREDENTIALS IMMEDIATELY ***");
-    }
-    
-    private void createAdminUser(String username, String password, String email, Role userRole, Role adminRole) {
         try {
-            User adminUser = new User();
-            adminUser.setUsername(username);
-            adminUser.setFirstname("Admin");
-            adminUser.setLastname("User");
-            adminUser.setEmail(email != null ? email : username + "@temp.com");
-            adminUser.setPassword(passwordEncoder.encode(password));
-            adminUser.setRoles(Arrays.asList(adminRole, userRole));
+            Optional<User> existingAdmin = userRepository.findByUsername(adminUsername);
             
-            User savedAdmin = userRepository.save(adminUser);
-            
-            System.out.println("✅ Admin user created successfully:");
-            System.out.println("   Username: " + savedAdmin.getUsername());
-            System.out.println("   Email: " + savedAdmin.getEmail());
-            System.out.println("   ID: " + savedAdmin.getId());
-            System.out.println("   Roles: " + savedAdmin.getRoles().size());
-            
-            // Verify roles were saved
-            savedAdmin.getRoles().forEach(role -> {
-                System.out.println("   - " + role.getName());
-            });
+            if (existingAdmin.isPresent()) {
+                // Fix existing admin if password is not BCrypt encoded
+                User admin = existingAdmin.get();
+                
+                // Check if password is properly BCrypt encoded
+                if (!admin.getPassword().startsWith("$2a$") && !admin.getPassword().startsWith("$2b$")) {
+                    System.out.println("🔧 Fixing admin password encoding...");
+                    admin.setPassword(passwordEncoder.encode(adminPassword));
+                    userRepository.save(admin);
+                    System.out.println("✅ Admin password encoding fixed");
+                } else {
+                    System.out.println("✓ Admin user already exists with proper encoding");
+                }
+            } else {
+                // Create new admin user
+                User adminUser = new User();
+                adminUser.setUsername(adminUsername.trim());
+                adminUser.setFirstname(adminFirstname);
+                adminUser.setLastname(adminLastname);
+                adminUser.setEmail(adminEmail != null ? adminEmail : adminUsername + "@company.com");
+                adminUser.setPassword(passwordEncoder.encode(adminPassword));
+                adminUser.setRoles(Arrays.asList(adminRole, userRole));
+                
+                User savedAdmin = userRepository.save(adminUser);
+                System.out.println("✅ Admin user created successfully");
+                System.out.println("   Username: " + savedAdmin.getUsername());
+                System.out.println("   Email: " + savedAdmin.getEmail());
+            }
             
         } catch (Exception e) {
-            System.err.println("❌ Failed to create admin user: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Failed to create/fix admin user: " + e.getMessage());
         }
-    }
-    
-    private Optional<User> findExistingAdmin() {
-        // Check if any user has admin role
-        return userRepository.findAll().stream()
-            .filter(user -> user.getRoles() != null && 
-                user.getRoles().stream().anyMatch(role -> "ROLE_ADMIN".equals(role.getName())))
-            .findFirst();
     }
 }
