@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ import com.bbzbl.flowerbouquet.user.UserRepository;
 
 /**
  * Data loader that initializes default users, roles, and privileges when the application starts.
- * This ensures that the system has proper initial security setup.
+ * Uses environment variables for secure credential management.
  */
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -35,6 +36,66 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Security configuration from environment variables
+    // 🚨 NO DEFAULT - Environment variable REQUIRED
+    @Value("${app.security.pepper}")
+    private String pepper;
+
+    // ⚠️ NO DEFAULT for password - Environment variable REQUIRED  
+    @Value("${app.admin.username:admin}")  // Username default OK
+    private String adminUsername;
+
+    @Value("${app.admin.password}")  // 🚨 NO DEFAULT - REQUIRED
+    private String adminPassword;
+
+    // ✅ Non-sensitive defaults OK
+    @Value("${app.admin.email:admin@company.com}")
+    private String adminEmail;
+
+    @Value("${app.admin.firstname:System}")
+    private String adminFirstname;
+
+    @Value("${app.admin.lastname:Administrator}")
+    private String adminLastname;
+
+    // Test user with NO password default
+    @Value("${app.testuser.username:testuser}")
+    private String testUsername;
+
+    @Value("${app.testuser.password:}")  // Empty default = disabled
+    private String testPassword;
+
+    @Value("${app.testuser.email:test@company.com}")
+    private String testEmail;
+
+    @Value("${app.testuser.firstname:Test}")
+    private String testFirstname;
+
+    @Value("${app.testuser.lastname:User}")
+    private String testLastname;
+
+    // Control flags
+    @Value("${app.setup.create-admin:true}")
+    private boolean createAdminUser;
+
+    @Value("${app.setup.create-testuser:false}")  // Disabled by default
+    private boolean createTestUser;
+
+    @Value("${app.setup.log-credentials:false}")
+    private boolean logCredentials;
+
+    private void debugEnvironmentVariables() {
+        System.out.println("=== ENVIRONMENT VARIABLES DEBUG ===");
+        System.out.println("Pepper configured: " + (pepper != null && !pepper.isEmpty()));
+        System.out.println("Pepper value: " + (pepper != null ? pepper.substring(0, Math.min(10, pepper.length())) + "..." : "null"));
+        System.out.println("Admin username: " + adminUsername);
+        System.out.println("Admin password configured: " + (adminPassword != null && !adminPassword.isEmpty()));
+        System.out.println("Admin password: " + (adminPassword != null ? adminPassword.substring(0, Math.min(5, adminPassword.length())) + "..." : "null"));
+        System.out.println("Create admin user: " + createAdminUser);
+        System.out.println("Log credentials: " + logCredentials);
+        System.out.println("=== END ENVIRONMENT VARIABLES DEBUG ===");
+    }
+
     /**
      * Executes when the application context is refreshed (application startup).
      */
@@ -44,6 +105,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if (alreadySetup) {
             return;
         }
+
+        debugEnvironmentVariables();
 
         // Create privileges
         Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE", "Read access to resources");
@@ -75,11 +138,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         );
         Role moderatorRole = createRoleIfNotFound("ROLE_MODERATOR", moderatorPrivileges);
 
-        // Create default admin user
-        createDefaultAdminUser(adminRole);
+        // Create default users based on configuration
+        if (createAdminUser) {
+            createDefaultAdminUser(adminRole);
+        }
 
-        // Create default regular user
-        createDefaultUser(userRole);
+        if (createTestUser) {
+            createDefaultUser(userRole);
+        }
 
         alreadySetup = true;
     }
@@ -99,7 +165,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     /**
      * Creates a role if it doesn't already exist.
-     * Removed setDescription call since Role entity might not have this field.
      */
     @Transactional
     Role createRoleIfNotFound(String name, Collection<Privilege> privileges) {
@@ -121,24 +186,28 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
      */
     @Transactional
     void createDefaultAdminUser(Role adminRole) {
-        if (userRepository.findByUsername("admin").isEmpty()) {
+        if (userRepository.findByUsername(adminUsername).isEmpty()) {
             User adminUser = new User();
-            adminUser.setUsername("admin");
-            adminUser.setFirstname("System");
-            adminUser.setLastname("Administrator");
-            adminUser.setEmail("admin@flowerbouquet.com");
+            adminUser.setUsername(adminUsername);
+            adminUser.setFirstname(adminFirstname);
+            adminUser.setLastname(adminLastname);
+            adminUser.setEmail(adminEmail);
             
-            // Add pepper to password before encoding (same as in AuthController)
-            String password = "Admin123!@#";
-            String pepperedPassword = addPepper(password);
+            // Add pepper to password before encoding
+            String pepperedPassword = addPepper(adminPassword);
             adminUser.setPassword(passwordEncoder.encode(pepperedPassword));
             
             adminUser.setRoles(Arrays.asList(adminRole));
             userRepository.save(adminUser);
             
-            System.out.println("Default admin user created:");
-            System.out.println("Username: admin");
-            System.out.println("Password: Admin123!@# (CHANGE THIS IN PRODUCTION!)");
+            if (logCredentials) {
+                System.out.println("Default admin user created:");
+                System.out.println("Username: " + adminUsername);
+                System.out.println("Password: " + adminPassword + " (CHANGE THIS IN PRODUCTION!)");
+            } else {
+                System.out.println("Default admin user created with username: " + adminUsername);
+                System.out.println("Password set from configuration (check environment variables)");
+            }
         }
     }
 
@@ -147,34 +216,35 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
      */
     @Transactional
     void createDefaultUser(Role userRole) {
-        if (userRepository.findByUsername("user").isEmpty()) {
+        if (userRepository.findByUsername(testUsername).isEmpty()) {
             User regularUser = new User();
-            regularUser.setUsername("user");
-            regularUser.setFirstname("Test");
-            regularUser.setLastname("User");
-            regularUser.setEmail("user@flowerbouquet.com");
+            regularUser.setUsername(testUsername);
+            regularUser.setFirstname(testFirstname);
+            regularUser.setLastname(testLastname);
+            regularUser.setEmail(testEmail);
             
             // Add pepper to password before encoding
-            String password = "User123!";
-            String pepperedPassword = addPepper(password);
+            String pepperedPassword = addPepper(testPassword);
             regularUser.setPassword(passwordEncoder.encode(pepperedPassword));
             
             regularUser.setRoles(Arrays.asList(userRole));
             userRepository.save(regularUser);
             
-            System.out.println("Default test user created:");
-            System.out.println("Username: user");
-            System.out.println("Password: User123!");
+            if (logCredentials) {
+                System.out.println("Default test user created:");
+                System.out.println("Username: " + testUsername);
+                System.out.println("Password: " + testPassword);
+            } else {
+                System.out.println("Default test user created with username: " + testUsername);
+                System.out.println("Password set from configuration");
+            }
         }
     }
 
     /**
-     * Add pepper to password (must match the pepper used in AuthController).
+     * Add pepper to password (pepper is now from environment variable).
      */
     private String addPepper(String password) {
-        // This should match the pepper in AuthController
-        // In production, store this in environment variables or secure configuration
-        final String PEPPER = "MySecretPepperKey2024!@#$%^&*()";
-        return password + PEPPER;
+        return password + pepper;
     }
 }

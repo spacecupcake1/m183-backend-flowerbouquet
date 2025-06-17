@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,6 +49,10 @@ public class AuthController {
 
     @Autowired
     private InputValidationService inputValidationService;
+
+    // Security configuration from environment variables
+    @Value("${app.security.pepper:MySecretPepperKey2024!@#$%^&*()}")
+    private String pepper;
 
     /**
      * User registration endpoint with comprehensive validation and security checks.
@@ -196,10 +201,14 @@ public class AuthController {
         Map<String, Object> response = new HashMap<>();
         
         try {
+            System.out.println("=== LOGIN DEBUG START ===");
+            System.out.println("Raw login request: " + loginRequest.getUsername() + " / " + (loginRequest.getPassword() != null ? "***" : "null"));
+            
             // Validate and sanitize inputs using your InputValidationService
             InputValidationService.ValidationResult usernameResult = inputValidationService.validateAndSanitize(loginRequest.getUsername());
             
             if (!usernameResult.isValid()) {
+                System.out.println("Username validation failed: " + usernameResult.getError());
                 response.put("message", "Invalid input format: " + usernameResult.getError());
                 return ResponseEntity.badRequest().body(response);
             }
@@ -207,43 +216,69 @@ public class AuthController {
             String username = usernameResult.getSanitized();
             String password = loginRequest.getPassword(); // Don't sanitize password
 
+            System.out.println("Sanitized username: " + username);
+            System.out.println("Password present: " + (password != null && !password.isEmpty()));
+
             // Check for null/empty values (this was the issue - username was null)
             if (username == null || username.trim().isEmpty()) {
+                System.out.println("Username is null or empty after sanitization");
                 response.put("message", "Username cannot be empty");
                 return ResponseEntity.badRequest().body(response);
             }
             
             if (password == null || password.trim().isEmpty()) {
+                System.out.println("Password is null or empty");
                 response.put("message", "Password cannot be empty");
                 return ResponseEntity.badRequest().body(response);
             }
 
             // Additional username validation
             if (!inputValidationService.isValidUsername(username)) {
+                System.out.println("Username format validation failed");
                 response.put("message", "Invalid username format");
                 return ResponseEntity.badRequest().body(response);
             }
 
             // Password security check (without sanitizing to preserve special characters)
             if (!inputValidationService.isSecurePassword(password)) {
+                System.out.println("Password security check failed");
                 response.put("message", "Password contains potentially dangerous content");
                 return ResponseEntity.badRequest().body(response);
             }
 
+            // Check if user exists in database
+            User user = userService.findByUsername(username).orElse(null);
+            if (user == null) {
+                System.out.println("User not found in database: " + username);
+                response.put("message", "Invalid username or password");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+            
+            System.out.println("User found in database: " + user.getUsername());
+            System.out.println("User enabled: " + user.isEnabled());
+            System.out.println("Account non-locked: " + user.isAccountNonLocked());
+
             // Add pepper to password for authentication
             String pepperedPassword = addPepper(password);
+            System.out.println("Pepper used: " + pepper);
+            System.out.println("Password with pepper length: " + pepperedPassword.length());
+
+            // Check stored password hash
+            System.out.println("Stored password hash: " + user.getPassword());
+            
+            // Test password matching manually
+            boolean passwordMatches = passwordEncoder.matches(pepperedPassword, user.getPassword());
+            System.out.println("Password matches: " + passwordMatches);
 
             // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, pepperedPassword)
             );
 
+            System.out.println("Authentication successful: " + authentication.isAuthenticated());
+
             // IMPORTANT: Set authentication in security context for session
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Get user details
-            User user = userService.findByUsername(username)
-                .orElseThrow(() -> new BadCredentialsException("User not found"));
 
             // Create new session for security (session fixation protection)
             HttpSession oldSession = request.getSession(false);
@@ -274,15 +309,23 @@ public class AuthController {
                 .collect(Collectors.toList()));
             response.put("isAdmin", userService.isAdmin(user));
 
+            System.out.println("=== LOGIN DEBUG END - SUCCESS ===");
             return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
+            System.out.println("BadCredentialsException: " + e.getMessage());
+            System.out.println("=== LOGIN DEBUG END - BAD CREDENTIALS ===");
             response.put("message", "Invalid username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (SecurityException e) {
+            System.out.println("SecurityException: " + e.getMessage());
+            System.out.println("=== LOGIN DEBUG END - SECURITY ERROR ===");
             response.put("message", "Security validation failed");
             return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
+            System.out.println("General Exception: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("=== LOGIN DEBUG END - GENERAL ERROR ===");
             response.put("message", "Login failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
@@ -347,12 +390,10 @@ public class AuthController {
 
     /**
      * Add pepper to password for additional security.
-     * Pepper is a secret constant added to passwords before hashing.
+     * Pepper is now loaded from environment variables for security.
      */
     private String addPepper(String password) {
-        // In production, store this in environment variables or secure configuration
-        final String PEPPER = "MySecretPepperKey2024!@#$%^&*()";
-        return password + PEPPER;
+        return password + pepper;
     }
 
     /**
