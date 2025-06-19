@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +23,7 @@ public class UserService {
     private RoleRepository roleRepository;
     
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Value("${app.security.pepper:MySecretPepperKey2024!@#$%^&*()}")
-    private String pepper;
+    private PasswordEncoder passwordEncoder; // This will now be the EnhancedPasswordEncoder
 
     public List<User> getAllUsers() {
         return userRepository.findAllWithRoles();
@@ -49,11 +45,11 @@ public class UserService {
         user.setLastname(registrationDTO.getLastname());
         user.setEmail(registrationDTO.getEmail());
         
-        // Hash password with pepper + BCrypt
-        String hashedPassword = hashPasswordWithPepper(registrationDTO.getPassword());
+        // Use passwordEncoder directly (it now handles pepper automatically via EnhancedPasswordEncoder)
+        String hashedPassword = passwordEncoder.encode(registrationDTO.getPassword());
         user.setPassword(hashedPassword);
         
-        // Set default user role - FIXED: Proper Optional handling
+        // Set default user role
         Role userRole = roleRepository.findByName("ROLE_USER");
         if (userRole == null) {
             throw new RuntimeException("Error: Role ROLE_USER is not found.");
@@ -74,7 +70,6 @@ public class UserService {
 
     public User saveUser(User user) {
         // For backward compatibility with existing code
-        // This method should only be used for non-registration scenarios
         user.setUpdatedAt(LocalDateTime.now());
         if (user.getCreatedAt() == null) {
             user.setCreatedAt(LocalDateTime.now());
@@ -148,19 +143,10 @@ public class UserService {
     // ========== PASSWORD SECURITY METHODS ==========
 
     /**
-     * Hash password with pepper + BCrypt
-     */
-    private String hashPasswordWithPepper(String rawPassword) {
-        String pepperedPassword = rawPassword + pepper;
-        return passwordEncoder.encode(pepperedPassword);
-    }
-    
-    /**
-     * Verify password with pepper + BCrypt
+     * Verify password - now uses passwordEncoder directly which handles pepper automatically
      */
     public boolean verifyPassword(String rawPassword, String encodedPassword) {
-        String pepperedPassword = rawPassword + pepper;
-        return passwordEncoder.matches(pepperedPassword, encodedPassword);
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
     
     /**
@@ -207,10 +193,10 @@ public class UserService {
         // Validate new password strength
         validatePasswordStrength(newPassword);
         
-        // Hash and set new password
-        user.setPassword(hashPasswordWithPepper(newPassword));
+        // Hash and set new password using passwordEncoder directly
+        user.setPassword(passwordEncoder.encode(newPassword));
         user.setUpdatedAt(LocalDateTime.now());
-        user.setCredentialsNonExpired(true); // Reset expiry if needed
+        user.setCredentialsNonExpired(true);
         
         return userRepository.save(user);
     }
@@ -227,7 +213,7 @@ public class UserService {
      */
     public void updateLastLogin(Long userId) {
         userRepository.findById(userId).ifPresent(user -> {
-            user.setLastLogin(java.time.LocalDateTime.now());
+            user.setLastLogin(LocalDateTime.now());
             userRepository.save(user);
         });
     }
