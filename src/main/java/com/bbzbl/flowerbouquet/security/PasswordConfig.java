@@ -13,11 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordConfig {
 
     /**
-     * Password encoder with BCrypt for secure password hashing.
-     * BCrypt automatically handles salt generation and provides strong protection.
+     * BCrypt password encoder with strong work factor
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // Work factor 12 provides good security vs performance balance
         return new BCryptPasswordEncoder(12);
     }
 }

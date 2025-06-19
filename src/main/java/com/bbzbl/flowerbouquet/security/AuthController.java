@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbzbl.flowerbouquet.security.UserDetailsServiceImpl.CustomUserPrincipal;
 import com.bbzbl.flowerbouquet.user.User;
+import com.bbzbl.flowerbouquet.user.UserRegistrationDTO;
 import com.bbzbl.flowerbouquet.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,14 +41,17 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/users")
 public class AuthController {
 
+    // ADD THIS LOGGER FIELD - THIS FIXES THE ERROR
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // @Autowired
+    // private PasswordEncoder passwordEncoder;
 
     @Autowired
     private InputValidationService inputValidationService;
@@ -83,14 +89,14 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Get sanitized values using your method name
+            // Get sanitized values
             String username = usernameResult.getSanitized();
             String firstname = firstnameResult.getSanitized();
             String lastname = lastnameResult.getSanitized();
             String email = emailResult.getSanitized();
             String password = registrationRequest.getPassword(); // Don't sanitize passwords
 
-            // Additional validation using your specific validation methods
+            // Additional validation checks
             if (!inputValidationService.isValidUsername(username)) {
                 response.put("error", "Invalid username format");
                 Map<String, String> fieldErrors = new HashMap<>();
@@ -151,7 +157,7 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Password security validation using your method
+            // Password security validation
             if (!inputValidationService.isSecurePassword(password)) {
                 response.put("error", "Password does not meet security requirements");
                 Map<String, String> fieldErrors = new HashMap<>();
@@ -169,18 +175,20 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Create user with encoded password (includes salt + pepper)
-            User user = new User();
-            user.setUsername(username);
-            user.setFirstname(firstname);
-            user.setLastname(lastname);
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(addPepper(password)));
+            // FIXED: Convert UserRegistrationRequest to UserRegistrationDTO
+            UserRegistrationDTO dto = new UserRegistrationDTO();
+            dto.setUsername(username);
+            dto.setFirstname(firstname);
+            dto.setLastname(lastname);
+            dto.setEmail(email);
+            dto.setPassword(password);
 
-            User savedUser = userService.createUser(user);
+            // Create user using the DTO
+            User createdUser = userService.createUser(dto);
 
+            // FIXED: Use createdUser instead of savedUser
             response.put("message", "User registered successfully");
-            response.put("userId", savedUser.getId());
+            response.put("userId", createdUser.getId());
             return ResponseEntity.ok(response);
 
         } catch (SecurityException e) {
@@ -196,138 +204,61 @@ public class AuthController {
      * Secure login endpoint with session management and authentication.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        
-        Map<String, Object> response = new HashMap<>();
-        
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, 
+                                HttpServletRequest request) {
         try {
-            System.out.println("=== LOGIN DEBUG START ===");
-            System.out.println("Raw login request: " + loginRequest.getUsername() + " / " + (loginRequest.getPassword() != null ? "***" : "null"));
+            // Input validation
+            inputValidationService.validateInput(loginRequest.getUsername(), "username");
             
-            // Validate and sanitize inputs using your InputValidationService
-            InputValidationService.ValidationResult usernameResult = inputValidationService.validateAndSanitize(loginRequest.getUsername());
+            // Rate limiting check (commented out for now)
+            // rateLimitingService.checkLoginAttempts(request.getRemoteAddr());
             
-            if (!usernameResult.isValid()) {
-                System.out.println("Username validation failed: " + usernameResult.getError());
-                response.put("message", "Invalid input format: " + usernameResult.getError());
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            String username = usernameResult.getSanitized();
-            String password = loginRequest.getPassword(); // Don't sanitize password
-
-            System.out.println("Sanitized username: " + username);
-            System.out.println("Password present: " + (password != null && !password.isEmpty()));
-
-            // Check for null/empty values (this was the issue - username was null)
-            if (username == null || username.trim().isEmpty()) {
-                System.out.println("Username is null or empty after sanitization");
-                response.put("message", "Username cannot be empty");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            if (password == null || password.trim().isEmpty()) {
-                System.out.println("Password is null or empty");
-                response.put("message", "Password cannot be empty");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Additional username validation
-            if (!inputValidationService.isValidUsername(username)) {
-                System.out.println("Username format validation failed");
-                response.put("message", "Invalid username format");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Password security check (without sanitizing to preserve special characters)
-            if (!inputValidationService.isSecurePassword(password)) {
-                System.out.println("Password security check failed");
-                response.put("message", "Password contains potentially dangerous content");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Check if user exists in database
-            User user = userService.findByUsername(username).orElse(null);
-            if (user == null) {
-                System.out.println("User not found in database: " + username);
-                response.put("message", "Invalid username or password");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
-            
-            System.out.println("User found in database: " + user.getUsername());
-            System.out.println("User enabled: " + user.isEnabled());
-            System.out.println("Account non-locked: " + user.isAccountNonLocked());
-
-            // Add pepper to password for authentication
-            String pepperedPassword = addPepper(password);
-            System.out.println("Pepper used: " + pepper);
-            System.out.println("Password with pepper length: " + pepperedPassword.length());
-
-            // Check stored password hash
-            System.out.println("Stored password hash: " + user.getPassword());
-            
-            // Test password matching manually
-            boolean passwordMatches = passwordEncoder.matches(pepperedPassword, user.getPassword());
-            System.out.println("Password matches: " + passwordMatches);
-
             // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, pepperedPassword)
+                new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), 
+                    loginRequest.getPassword()
+                )
             );
-
-            System.out.println("Authentication successful: " + authentication.isAuthenticated());
-
-            // IMPORTANT: Set authentication in security context for session
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // Create new session for security (session fixation protection)
-            HttpSession oldSession = request.getSession(false);
-            if (oldSession != null) {
-                oldSession.invalidate(); // Invalidate old session
-            }
             
-            HttpSession newSession = request.getSession(true); // Create new session
-            newSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-            newSession.setAttribute("userId", user.getId());
-            newSession.setAttribute("username", user.getUsername());
-            newSession.setMaxInactiveInterval(30 * 60); // 30 minutes
-
-            // Update user's last login time
-            user.setLastLogin(java.time.LocalDateTime.now());
-            userService.save(user); // You might need to add this method to UserService
-
-            // Prepare response
-            response.put("message", "Login successful");
-            response.put("sessionId", newSession.getId());
-            response.put("userId", user.getId());
-            response.put("username", user.getUsername());
-            response.put("firstname", user.getFirstname());
-            response.put("lastname", user.getLastname());
-            response.put("email", user.getEmail());
-            response.put("roles", user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList()));
-            response.put("isAdmin", userService.isAdmin(user));
-
-            System.out.println("=== LOGIN DEBUG END - SUCCESS ===");
-            return ResponseEntity.ok(response);
-
+            // Create secure session
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            HttpSession session = request.getSession(true);
+            
+            // Session security settings
+            session.setMaxInactiveInterval(3600); // 1 hour
+            session.setAttribute("SPRING_SECURITY_CONTEXT", 
+                            SecurityContextHolder.getContext());
+            
+            // Log successful login - NOW LOGGER WORKS
+            logger.info("User {} logged in successfully from IP: {}", 
+                    loginRequest.getUsername(), request.getRemoteAddr());
+            
+            // Return user info
+            CustomUserPrincipal userPrincipal = (CustomUserPrincipal) authentication.getPrincipal();
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Login successful",
+                "sessionId", session.getId(),
+                "userId", userPrincipal.getId(),
+                "username", userPrincipal.getUsername(),
+                "roles", userPrincipal.getAuthorities().stream()
+                    .map(auth -> auth.getAuthority())
+                    .collect(Collectors.toList()),
+                "isAdmin", userPrincipal.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))
+            ));
+            
         } catch (BadCredentialsException e) {
-            System.out.println("BadCredentialsException: " + e.getMessage());
-            System.out.println("=== LOGIN DEBUG END - BAD CREDENTIALS ===");
-            response.put("message", "Invalid username or password");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        } catch (SecurityException e) {
-            System.out.println("SecurityException: " + e.getMessage());
-            System.out.println("=== LOGIN DEBUG END - SECURITY ERROR ===");
-            response.put("message", "Security validation failed");
-            return ResponseEntity.badRequest().body(response);
-        } catch (Exception e) {
-            System.out.println("General Exception: " + e.getMessage());
-            e.printStackTrace();
-            System.out.println("=== LOGIN DEBUG END - GENERAL ERROR ===");
-            response.put("message", "Login failed: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            // Log failed attempt - NOW LOGGER WORKS
+            logger.warn("Failed login attempt for user {} from IP: {}", 
+                    loginRequest.getUsername(), request.getRemoteAddr());
+            
+            // Increment failed attempts (commented out for now)
+            // rateLimitingService.recordFailedAttempt(request.getRemoteAddr());
+            
+            return ResponseEntity.status(401)
+                .body(Map.of("error", "Invalid username or password"));
         }
     }
 
@@ -386,14 +317,6 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-    }
-
-    /**
-     * Add pepper to password for additional security.
-     * Pepper is now loaded from environment variables for security.
-     */
-    private String addPepper(String password) {
-        return password + pepper;
     }
 
     /**
@@ -461,5 +384,49 @@ public class AuthController {
         public void setUsername(String username) { this.username = username; }
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
+    }
+
+    /**
+     * Create first admin user (only works if no admin exists)
+     */
+    @PostMapping("/create-admin")
+    public ResponseEntity<?> createFirstAdmin(@Valid @RequestBody UserRegistrationRequest request) {
+        
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Check if any admin already exists
+            boolean adminExists = userService.getAllUsers().stream()
+                .anyMatch(user -> userService.isAdmin(user));
+            
+            if (adminExists) {
+                response.put("error", "Admin user already exists");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Convert to DTO
+            UserRegistrationDTO dto = new UserRegistrationDTO();
+            dto.setUsername(request.getUsername());
+            dto.setFirstname(request.getFirstname());
+            dto.setLastname(request.getLastname());
+            dto.setEmail(request.getEmail());
+            dto.setPassword(request.getPassword());
+            
+            // Create user
+            User adminUser = userService.createUser(dto);
+            
+            // Add admin role
+            userService.addRoleToUser(adminUser.getId(), "ROLE_ADMIN");
+            
+            response.put("message", "Admin user created successfully");
+            response.put("userId", adminUser.getId());
+            response.put("username", adminUser.getUsername());
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            response.put("error", "Failed to create admin: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bbzbl.flowerbouquet.security.InputSanitizer;
+import com.bbzbl.flowerbouquet.security.InputValidationService;
 import com.bbzbl.flowerbouquet.user.User;
 import com.bbzbl.flowerbouquet.user.UserService;
 
@@ -49,6 +50,9 @@ public class FlowerController {
         this.userService = userService;
         this.inputSanitizer = inputSanitizer;
     }
+
+     @Autowired
+    private InputValidationService validationService;
 
     // ========== PUBLIC ENDPOINTS ==========
 
@@ -163,25 +167,24 @@ public class FlowerController {
      * POST /api/flowers : Create a new flower (Admin only).
      */
     @PostMapping
-    public ResponseEntity<?> createFlower(
-            @Valid @RequestBody FlowerDTO flowerDTO, 
-            @RequestParam @NotNull @Min(1) Long userId) {
+    public ResponseEntity<?> createFlower(@Valid @RequestBody FlowerDTO flowerDTO, 
+                                        @RequestParam Long userId) {
         
-        // Check admin privileges
-        if (!isUserAdmin(userId)) {
-            return ResponseEntity.status(403).body(createErrorResponse("Access denied. Admin privileges required."));
-        }
-
-        try {
-            // Convert DTO to Entity with additional validation
-            Flower flower = convertDtoToEntity(flowerDTO);
-            validateAndSanitizeFlower(flower);
-            
-            Flower createdFlower = flowerService.createFlower(flower);
-            return ResponseEntity.status(201).body(createdFlower);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(createErrorResponse("Failed to create flower: " + e.getMessage()));
-        }
+        // Validate and sanitize all inputs
+        validationService.validateInput(flowerDTO.getName(), "name");
+        validationService.validateInput(flowerDTO.getMeaning(), "meaning");
+        validationService.validateInput(flowerDTO.getInfo(), "info");
+        
+        // Sanitize inputs before processing
+        flowerDTO.setName(validationService.sanitizeInput(flowerDTO.getName()));
+        flowerDTO.setMeaning(validationService.sanitizeInput(flowerDTO.getMeaning()));
+        flowerDTO.setInfo(validationService.sanitizeInput(flowerDTO.getInfo()));
+        
+        // Process flower creation...
+        Flower flower = flowerService.createFlower(convertDtoToEntity(flowerDTO));
+        
+        // Return sanitized output
+        return ResponseEntity.ok(flower);
     }
 
     /**

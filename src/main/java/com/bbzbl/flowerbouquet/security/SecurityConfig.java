@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -62,14 +62,6 @@ public class SecurityConfig {
     }
 
     /**
-     * HTTP session event publisher for session management events.
-     */
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
-
-    /**
      * Main security filter chain configuration.
      */
     @Bean
@@ -85,6 +77,17 @@ public class SecurityConfig {
             .headers(headers -> headers
                 .frameOptions().deny()
                 .contentTypeOptions().and()
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true) // Note: includeSubDomains, not includeSubdomains
+                    .preload(true)
+                )
+                .contentSecurityPolicy("default-src 'self'; " +
+                                    "script-src 'self' 'unsafe-inline'; " +
+                                    "style-src 'self' 'unsafe-inline'; " +
+                                    "img-src 'self' data: https:; " +
+                                    "font-src 'self'; " +
+                                    "connect-src 'self'")
             )
             
             // Authorization rules
@@ -92,6 +95,21 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                 .requestMatchers("/error", "/favicon.ico").permitAll()
+                
+                // Public flower viewing endpoints
+                .requestMatchers(HttpMethod.GET, "/api/flowers", "/api/flowers/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/flowers/search").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/flowers/filter").permitAll()
+                
+                // Cart/customize endpoints (authenticated users)
+                .requestMatchers("/api/flowers/customize/**").authenticated()
+                
+                // Admin flower management endpoints
+                .requestMatchers(HttpMethod.POST, "/api/flowers").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/flowers/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/flowers/**").hasRole("ADMIN")
+                .requestMatchers("/api/flowers/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/flowers/bulk").hasRole("ADMIN")
                 
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -118,14 +136,6 @@ public class SecurityConfig {
             
             // Authentication configuration
             .authenticationProvider(authenticationProvider())
-            
-            // REMOVED: Form login configuration - we handle login through REST API
-            // .formLogin(form -> form
-            //     .loginProcessingUrl("/api/users/login")
-            //     .successHandler(authenticationSuccessHandler)
-            //     .failureHandler(authenticationFailureHandler)
-            //     .permitAll()
-            // )
             
             // Logout configuration
             .logout(logout -> logout
