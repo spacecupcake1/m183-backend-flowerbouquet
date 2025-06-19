@@ -1,3 +1,5 @@
+// Update src/main/java/com/bbzbl/flowerbouquet/security/EnhancedPasswordEncoder.java
+
 package com.bbzbl.flowerbouquet.security;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -6,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EnhancedPasswordEncoder {
+public class EnhancedPasswordEncoder implements PasswordEncoder {
     
     @Value("${app.security.pepper:MySecretPepperKey2024!@#$%^&*()}")
     private String pepper;
@@ -17,23 +19,19 @@ public class EnhancedPasswordEncoder {
         this.bcryptEncoder = new BCryptPasswordEncoder(12);
     }
     
-    /**
-     * Encode password with pepper + BCrypt (salt + hash)
-     */
-    public String encode(String rawPassword) {
+    @Override
+    public String encode(CharSequence rawPassword) {
         // Add pepper before hashing
-        String pepperedPassword = rawPassword + pepper;
+        String pepperedPassword = rawPassword.toString() + pepper;
         
         // BCrypt handles salt generation automatically
         return bcryptEncoder.encode(pepperedPassword);
     }
     
-    /**
-     * Verify password with pepper + BCrypt
-     */
-    public boolean matches(String rawPassword, String encodedPassword) {
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
         // Add pepper before verification
-        String pepperedPassword = rawPassword + pepper;
+        String pepperedPassword = rawPassword.toString() + pepper;
         
         return bcryptEncoder.matches(pepperedPassword, encodedPassword);
     }
