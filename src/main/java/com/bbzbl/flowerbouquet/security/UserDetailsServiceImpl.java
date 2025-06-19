@@ -15,10 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbzbl.flowerbouquet.user.User;
 import com.bbzbl.flowerbouquet.user.UserRepository;
 
-/**
- * Implementation of Spring Security's UserDetailsService.
- * This service is responsible for loading user-specific data during authentication.
- */
 @Service("userDetailsService")
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -26,13 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    /**
-     * Loads the user details by username for Spring Security authentication.
-     * 
-     * @param username the username of the user to load
-     * @return UserDetails containing user information and authorities
-     * @throws UsernameNotFoundException if user is not found
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
@@ -56,31 +45,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * Maps user roles to Spring Security authorities.
-     * 
-     * @param roles the user's roles
-     * @return collection of GrantedAuthority
+     * SIMPLIFIED: Maps user roles to Spring Security authorities
      */
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream()
-            .flatMap(role -> {
-                // Add role authority
-                var authorities = java.util.stream.Stream.of(new SimpleGrantedAuthority(role.getName()));
-                
-                // Add privilege authorities if they exist
-                if (role.getPrivileges() != null && !role.getPrivileges().isEmpty()) {
-                    var privilegeAuthorities = role.getPrivileges().stream()
-                        .map(privilege -> new SimpleGrantedAuthority(privilege.getName()));
-                    authorities = java.util.stream.Stream.concat(authorities, privilegeAuthorities);
-                }
-                
-                return authorities;
-            })
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
             .collect(Collectors.toList());
     }
 
     /**
-     * Custom UserDetails implementation that holds additional user information.
+     * Custom UserDetails implementation
      */
     public static class CustomUserPrincipal implements UserDetails {
         
@@ -107,7 +81,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             this.roles = roles;
         }
 
-        // UserDetails interface methods
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return authorities;
@@ -125,78 +98,38 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         @Override
         public boolean isAccountNonExpired() {
-            return true; // In production, implement based on business requirements
+            return true;
         }
 
         @Override
         public boolean isAccountNonLocked() {
-            return true; // In production, implement account locking mechanism
+            return true;
         }
 
         @Override
         public boolean isCredentialsNonExpired() {
-            return true; // In production, implement password expiration
+            return true;
         }
 
         @Override
         public boolean isEnabled() {
-            return true; // In production, implement user enabling/disabling
+            return true;
         }
 
-        // Additional getters for user information
-        public Long getId() {
-            return id;
-        }
+        // Additional getters
+        public Long getId() { return id; }
+        public String getFirstname() { return firstname; }
+        public String getLastname() { return lastname; }
+        public String getEmail() { return email; }
+        public Collection<Role> getRoles() { return roles; }
 
-        public String getFirstname() {
-            return firstname;
-        }
-
-        public String getLastname() {
-            return lastname;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public Collection<Role> getRoles() {
-            return roles;
-        }
-
-        /**
-         * Check if user has a specific role.
-         */
         public boolean hasRole(String roleName) {
             return authorities.stream()
                 .anyMatch(authority -> authority.getAuthority().equals(roleName));
         }
 
-        /**
-         * Check if user has admin role.
-         */
         public boolean isAdmin() {
             return hasRole("ROLE_ADMIN");
-        }
-
-        /**
-         * Check if user has a specific privilege.
-         */
-        public boolean hasPrivilege(String privilegeName) {
-            return authorities.stream()
-                .anyMatch(authority -> authority.getAuthority().equals(privilegeName));
-        }
-
-        @Override
-        public String toString() {
-            return "CustomUserPrincipal{" +
-                    "id=" + id +
-                    ", username='" + username + '\'' +
-                    ", firstname='" + firstname + '\'' +
-                    ", lastname='" + lastname + '\'' +
-                    ", email='" + email + '\'' +
-                    ", authorities=" + authorities +
-                    '}';
         }
     }
 }

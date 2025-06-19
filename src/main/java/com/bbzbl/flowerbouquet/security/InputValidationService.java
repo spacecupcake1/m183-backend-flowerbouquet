@@ -3,7 +3,6 @@ package com.bbzbl.flowerbouquet.security;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.HtmlUtils;
 
 /**
  * Service for validating and sanitizing user inputs to prevent security vulnerabilities.
@@ -13,15 +12,6 @@ import org.springframework.web.util.HtmlUtils;
 public class InputValidationService {
 
     // Patterns for detecting potentially malicious content
-    private static final Pattern SQL_INJECTION_PATTERN = Pattern.compile(
-        "(?i).*(?:union|select|insert|update|delete|drop|create|alter|exec|execute|script|javascript|vbscript).*",
-        Pattern.CASE_INSENSITIVE | Pattern.DOTALL
-    );
-
-    private static final Pattern XSS_PATTERN = Pattern.compile(
-        "(?i).*(?:<script|</script|javascript:|vbscript:|onload=|onerror=|onclick=|onmouseover=|<iframe|</iframe).*",
-        Pattern.CASE_INSENSITIVE | Pattern.DOTALL
-    );
 
     private static final Pattern HTML_TAG_PATTERN = Pattern.compile(
         "<[^>]+>",
@@ -45,6 +35,21 @@ public class InputValidationService {
     private static final Pattern VALID_EMAIL_PATTERN = Pattern.compile(
         "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
     );
+    
+    private static final Pattern SQL_INJECTION_PATTERN = Pattern.compile(
+        ".*('|(\\-\\-)|(;)|(\\|)|(\\*)|(%)|(\\bOR\\b)|(\\bAND\\b)|(\\bUNION\\b)|(\\bSELECT\\b)|(\\bINSERT\\b)|(\\bDELETE\\b)|(\\bUPDATE\\b)|(\\bDROP\\b)|(\\bCREATE\\b)|(\\bALTER\\b)).*",
+        Pattern.CASE_INSENSITIVE
+    );
+    
+    public void validateSearchInput(String searchTerm) {
+        if (searchTerm != null && searchTerm.length() > 100) {
+            throw new IllegalArgumentException("Search term too long");
+        }
+        
+        if (searchTerm != null && SQL_INJECTION_PATTERN.matcher(searchTerm).matches()) {
+            throw new IllegalArgumentException("Invalid search term");
+        }
+    }
 
     /**
      * Validates and sanitizes input string for security threats.
@@ -81,29 +86,6 @@ public class InputValidationService {
         }
 
         return new ValidationResult(true, sanitized, null);
-    }
-
-    /**
-     * Sanitizes input by removing/escaping dangerous content.
-     * 
-     * @param input the input to sanitize
-     * @return sanitized input
-     */
-    public String sanitizeInput(String input) {
-        if (input == null) {
-            return "";
-        }
-
-        // HTML encode to prevent XSS
-        String sanitized = HtmlUtils.htmlEscape(input);
-
-        // Remove HTML tags
-        sanitized = HTML_TAG_PATTERN.matcher(sanitized).replaceAll("");
-
-        // Trim whitespace
-        sanitized = sanitized.trim();
-
-        return sanitized;
     }
 
     /**
@@ -232,5 +214,54 @@ public class InputValidationService {
         public boolean isValid() { return valid; }
         public String getSanitized() { return sanitized; }
         public String getError() { return error; }
+    }
+
+    private static final Pattern XSS_PATTERN = Pattern.compile(
+        ".*(<script|javascript:|on\\w+\\s*=|<iframe|<object|<embed|<form|<input|<meta|<link).*",
+        Pattern.CASE_INSENSITIVE | Pattern.DOTALL
+    );
+    
+    private static final Pattern HTML_PATTERN = Pattern.compile("<[^>]*>");
+
+    /**
+     * Comprehensive input sanitization
+     */
+    public String sanitizeInput(String input) {
+        if (input == null) return null;
+        
+        // Remove HTML tags
+        String sanitized = HTML_PATTERN.matcher(input).replaceAll("");
+        
+        // Remove potential XSS patterns
+        sanitized = sanitized.replaceAll("(?i)javascript:", "");
+        sanitized = sanitized.replaceAll("(?i)on\\w+\\s*=", "");
+        sanitized = sanitized.replaceAll("(?i)expression\\s*\\(", "");
+        
+        // HTML entity encoding
+        sanitized = htmlEncode(sanitized);
+        
+        return sanitized.trim();
+    }
+    
+    /**
+     * Validate input for XSS patterns
+     */
+    public void validateInput(String input, String fieldName) {
+        if (input != null && XSS_PATTERN.matcher(input).matches()) {
+            throw new IllegalArgumentException("Invalid input in field: " + fieldName);
+        }
+    }
+    
+    /**
+     * HTML encode special characters
+     */
+    private String htmlEncode(String input) {
+        return input
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#x27;")
+            .replace("/", "&#x2F;");
     }
 }
