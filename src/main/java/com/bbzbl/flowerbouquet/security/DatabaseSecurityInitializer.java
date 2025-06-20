@@ -1,7 +1,6 @@
 package com.bbzbl.flowerbouquet.security;
 
 import java.sql.Connection;
-import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Initialize database security settings on application startup
+ * Simplified version for development - remove H2-specific settings that may cause compatibility issues
  */
 @Component
 public class DatabaseSecurityInitializer {
@@ -27,16 +27,13 @@ public class DatabaseSecurityInitializer {
     public void initializeDatabaseSecurity() {
         try (Connection connection = dataSource.getConnection()) {
             
-            // For H2 Database - Set security properties
-            if (connection.getMetaData().getDatabaseProductName().contains("H2")) {
-                try (Statement stmt = connection.createStatement()) {
-                    
-                    // Disable remote access in H2
-                    stmt.execute("SET @ALLOW_LITERALS NONE");
-                    
-                    // Log database security initialization
-                    logger.info("Database security settings initialized for H2");
-                }
+            String databaseProductName = connection.getMetaData().getDatabaseProductName();
+            logger.info("Database detected: {}", databaseProductName);
+            
+            // For development, we skip H2-specific security settings that may cause compatibility issues
+            // In production, implement proper database security configurations
+            if (databaseProductName.contains("H2")) {
+                logger.info("H2 Database detected - skipping advanced security settings for development");
             }
             
             logger.info("Database security initialization completed successfully");
