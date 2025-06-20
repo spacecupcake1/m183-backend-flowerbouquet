@@ -25,7 +25,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Complete Security configuration with all enhanced security features
+ * Complete Security configuration with REST API authentication (no form login)
  */
 @Configuration
 @EnableWebSecurity
@@ -37,12 +37,6 @@ public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @Autowired
-    private CustomAuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
     private SecurityHeadersConfig.ContentSecurityPolicyHeaderWriter cspHeaderWriter;
@@ -70,7 +64,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Complete security filter chain with all security features.
+     * Complete security filter chain with REST API authentication.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -89,6 +83,8 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()
                 .requestMatchers("/images/**", "/css/**", "/js/**", "/assets/**").permitAll()
+                
+                // Authentication endpoints - public
                 .requestMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/users/current").authenticated()
@@ -102,6 +98,16 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/flowers").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/flowers/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/flowers/**").hasRole("ADMIN")
+                
+                // Admin endpoints
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
+                
+                // User management endpoints
+                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
                 
                 // Development endpoints (H2 console) - REMOVE IN PRODUCTION
                 .requestMatchers("/h2-console/**").permitAll()
@@ -142,30 +148,7 @@ public class SecurityConfig {
             // Authentication provider
             .authenticationProvider(authenticationProvider())
             
-            // Form login configuration
-            .formLogin(form -> form
-                .loginProcessingUrl("/api/users/login")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
-                .permitAll()
-            )
-            
-            // Logout configuration
-            .logout(logout -> logout
-                .logoutUrl("/api/users/logout")
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    response.setStatus(200);
-                    response.setContentType("application/json");
-                    response.setCharacterEncoding("UTF-8");
-                    response.getWriter().write("{\"message\":\"Logout successful\"}");
-                })
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "FLOWERSESSIONID")
-                .clearAuthentication(true)
-                .permitAll()
-            )
-            
-            // Exception handling
+            // Exception handling for REST API
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(401);
@@ -186,6 +169,7 @@ public class SecurityConfig {
 
     /**
      * CORS configuration for frontend-backend communication.
+     * ENHANCED: More comprehensive CORS setup to fix preflight issues
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -200,41 +184,31 @@ public class SecurityConfig {
             "https://yourdomain.com" // Add your production domain
         ));
         
-        // Allow specific HTTP methods
-        configuration.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
-        ));
+        // Allow ALL HTTP methods (including OPTIONS for preflight)
+        configuration.setAllowedMethods(Arrays.asList("*"));
         
-        // Allow specific headers
-        configuration.setAllowedHeaders(Arrays.asList(
-            "Authorization", 
-            "Content-Type", 
-            "X-Requested-With", 
-            "Accept", 
-            "Origin",
-            "Access-Control-Request-Method",
-            "Access-Control-Request-Headers",
-            "X-Content-Type-Options",
-            "Cache-Control",
-            "Pragma",
-            "Expires",
-            "X-Frame-Options",
-            "X-XSS-Protection",
-            "X-CSRF-TOKEN"
-        ));
+        // Allow ALL headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         
         // Expose headers that frontend can read
         configuration.setExposedHeaders(Arrays.asList(
             "Access-Control-Allow-Origin",
             "Access-Control-Allow-Credentials",
-            "X-Content-Type-Options"
+            "X-Content-Type-Options",
+            "Authorization"
         ));
         
+        // CRITICAL: Allow credentials for session-based auth
         configuration.setAllowCredentials(true);
+        
+        // Cache preflight response for 1 hour
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        
+        // Apply to ALL endpoints
         source.registerCorsConfiguration("/**", configuration);
+        
         return source;
     }
 }

@@ -2,6 +2,7 @@ package com.bbzbl.flowerbouquet.user;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -89,7 +90,7 @@ public class AdminUserController {
             adminUser.setLastname(adminData.getLastname().trim());
             adminUser.setEmail(adminData.getEmail().trim().toLowerCase());
             adminUser.setPassword(passwordEncoder.encode(adminData.getPassword()));
-            adminUser.setRoles(Arrays.asList(adminRole, userRole));
+            adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole, userRole)));
             
             User createdAdmin = userRepository.save(adminUser);
             

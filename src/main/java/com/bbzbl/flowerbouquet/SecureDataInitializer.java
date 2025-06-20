@@ -1,6 +1,7 @@
 package com.bbzbl.flowerbouquet;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class SecureDataInitializer implements CommandLineRunner {
                 adminUser.setLastname(adminLastname);
                 adminUser.setEmail(adminEmail != null ? adminEmail : adminUsername + "@company.com");
                 adminUser.setPassword(passwordEncoder.encode(adminPassword));
-                adminUser.setRoles(Arrays.asList(adminRole, userRole));
+               adminUser.setRoles(new HashSet<>(Arrays.asList(adminRole, userRole)));
                 
                 User savedAdmin = userRepository.save(adminUser);
                 System.out.println("✅ Admin user created successfully");

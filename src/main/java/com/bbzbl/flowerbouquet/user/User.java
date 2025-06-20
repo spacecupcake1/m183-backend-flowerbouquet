@@ -11,6 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.bbzbl.flowerbouquet.security.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,6 +62,7 @@ public class User implements UserDetails {
     @NotBlank
     @Size(min = 60, max = 60) // BCrypt always produces 60-character hashes
     @Column(nullable = false)
+    @JsonIgnore // Never serialize password
     private String password;
 
     @NotBlank
@@ -76,24 +79,31 @@ public class User implements UserDetails {
     private Boolean emailVerified = false;
 
     @Column(name = "account_non_expired")
+    @JsonIgnore // Don't expose internal security flags
     private Boolean accountNonExpired = true;
 
     @Column(name = "account_non_locked")
+    @JsonIgnore // Don't expose internal security flags
     private Boolean accountNonLocked = true;
 
     @Column(name = "credentials_non_expired")
+    @JsonIgnore // Don't expose internal security flags
     private Boolean credentialsNonExpired = true;
 
     @Column(name = "enabled")
+    @JsonIgnore // Don't expose internal security flags
     private Boolean enabled = true;
 
     @Column(name = "failed_login_attempts")
+    @JsonIgnore // Don't expose security details
     private Integer failedLoginAttempts = 0;
 
     @Column(name = "last_failed_login")
+    @JsonIgnore // Don't expose security details
     private LocalDateTime lastFailedLogin;
 
     @Column(name = "account_locked_until")
+    @JsonIgnore // Don't expose security details
     private LocalDateTime accountLockedUntil;
 
     @Column(name = "created_at")
@@ -107,6 +117,7 @@ public class User implements UserDetails {
 
     /**
      * User roles for authorization - Many-to-Many relationship with Role entity
+     * FIXED: Break circular reference with @JsonIgnore on the Set<Role> and provide role names via getter
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -114,6 +125,7 @@ public class User implements UserDetails {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore // Ignore the full Role objects to prevent circular reference
     private Set<Role> roles = new HashSet<>();
 
     // Constructors
@@ -127,15 +139,39 @@ public class User implements UserDetails {
         this.lastname = lastname;
     }
 
-    // UserDetails implementation
+    // ========== JSON SERIALIZATION HELPERS ==========
+
+    /**
+     * Get role names for JSON serialization (instead of full Role objects)
+     */
+    @JsonProperty("roles")
+    public Set<String> getRoleNames() {
+        return roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Check if user is admin for JSON serialization
+     */
+    @JsonProperty("isAdmin")
+    public boolean isAdmin() {
+        return roles.stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+    }
+
+    // ========== UserDetails implementation ==========
+    
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -146,79 +182,42 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return accountNonExpired != null ? accountNonExpired : true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
-        // Check if account is temporarily locked due to failed login attempts
-        if (accountLockedUntil != null && LocalDateTime.now().isBefore(accountLockedUntil)) {
+        if (accountLockedUntil != null && accountLockedUntil.isAfter(LocalDateTime.now())) {
             return false;
         }
         return accountNonLocked != null ? accountNonLocked : true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return credentialsNonExpired != null ? credentialsNonExpired : true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return enabled != null ? enabled : true;
     }
 
-    // Business methods for security
-    public void incrementFailedLoginAttempts() {
-        this.failedLoginAttempts++;
-        this.lastFailedLogin = LocalDateTime.now();
-        
-        // Lock account after 5 failed attempts for 30 minutes
-        if (this.failedLoginAttempts >= 5) {
-            this.accountLockedUntil = LocalDateTime.now().plusMinutes(30);
-        }
-    }
+    // ========== GETTERS AND SETTERS ==========
 
-    public void resetFailedLoginAttempts() {
-        this.failedLoginAttempts = 0;
-        this.lastFailedLogin = null;
-        this.accountLockedUntil = null;
-    }
-
-    public boolean hasRole(String roleName) {
-        return roles.stream()
-                .anyMatch(role -> role.getName().equals(roleName));
-    }
-
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
-    public void removeRole(Role role) {
-        this.roles.remove(role);
-    }
-
-    // Lifecycle callbacks
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public void setUsername(String username) { this.username = username; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
 
     public String getFirstname() { return firstname; }
@@ -230,8 +229,30 @@ public class User implements UserDetails {
     public Boolean getEmailVerified() { return emailVerified; }
     public void setEmailVerified(Boolean emailVerified) { this.emailVerified = emailVerified; }
 
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+
+    // Internal getters/setters for Role management (not exposed via JSON)
     public Set<Role> getRoles() { return roles; }
-    public void setRoles(Collection<Role> roles) { this.roles = new HashSet<>(roles); }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    public Boolean getAccountNonExpired() { return accountNonExpired; }
+    public void setAccountNonExpired(Boolean accountNonExpired) { this.accountNonExpired = accountNonExpired; }
+
+    public Boolean getAccountNonLocked() { return accountNonLocked; }
+    public void setAccountNonLocked(Boolean accountNonLocked) { this.accountNonLocked = accountNonLocked; }
+
+    public Boolean getCredentialsNonExpired() { return credentialsNonExpired; }
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) { this.credentialsNonExpired = credentialsNonExpired; }
+
+    public Boolean getEnabled() { return enabled; }
+    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 
     public Integer getFailedLoginAttempts() { return failedLoginAttempts; }
     public void setFailedLoginAttempts(Integer failedLoginAttempts) { this.failedLoginAttempts = failedLoginAttempts; }
@@ -242,17 +263,29 @@ public class User implements UserDetails {
     public LocalDateTime getAccountLockedUntil() { return accountLockedUntil; }
     public void setAccountLockedUntil(LocalDateTime accountLockedUntil) { this.accountLockedUntil = accountLockedUntil; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    // ========== JPA LIFECYCLE METHODS ==========
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
-    public LocalDateTime getLastLogin() { return lastLogin; }
-    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) { this.accountNonExpired = accountNonExpired; }
-    public void setAccountNonLocked(Boolean accountNonLocked) { this.accountNonLocked = accountNonLocked; }
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) { this.credentialsNonExpired = credentialsNonExpired; }
-    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
+    // ========== UTILITY METHODS ==========
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                '}';
+    }
 }

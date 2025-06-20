@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,7 @@ import jakarta.validation.constraints.NotBlank;
  */
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @Validated
 public class AuthController {
 
@@ -65,100 +67,7 @@ public class AuthController {
     private SecurityAuditService securityAuditService;
 
     /**
-     * Enhanced user registration with comprehensive validation and security checks.
-     */
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody UserRegistrationDTO registrationDTO, 
-                                    BindingResult bindingResult,
-                                    HttpServletRequest request) {
-        
-        String ipAddress = getClientIpAddress(request);
-        
-        try {
-            // Log registration attempt
-            securityLogger.info("Registration attempt for username '{}' from IP: {}", 
-                               registrationDTO.getUsername(), ipAddress);
-
-            // Check for validation errors
-            if (bindingResult.hasErrors()) {
-                Map<String, String> errors = new HashMap<>();
-                for (FieldError error : bindingResult.getFieldErrors()) {
-                    errors.put(error.getField(), error.getDefaultMessage());
-                }
-                
-                securityLogger.warn("Registration validation failed for '{}' from IP {}: {}", 
-                                   registrationDTO.getUsername(), ipAddress, errors);
-                
-                return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Validation failed",
-                    "details", errors
-                ));
-            }
-
-            // Additional security validation
-            inputValidationService.validateInput(registrationDTO.getUsername(), "username");
-            inputValidationService.validateInput(registrationDTO.getEmail(), "email");
-            inputValidationService.validateInput(registrationDTO.getFirstname(), "firstname");
-            inputValidationService.validateInput(registrationDTO.getLastname(), "lastname");
-
-            // Check if user already exists
-            if (userService.existsByUsername(registrationDTO.getUsername())) {
-                securityLogger.warn("Registration attempt with existing username '{}' from IP: {}", 
-                                   registrationDTO.getUsername(), ipAddress);
-                return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Username already exists"
-                ));
-            }
-
-            if (userService.existsByEmail(registrationDTO.getEmail())) {
-                securityLogger.warn("Registration attempt with existing email '{}' from IP: {}", 
-                                   registrationDTO.getEmail(), ipAddress);
-                return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Email already exists"
-                ));
-            }
-
-            // Create user
-            User user = userService.createUser(registrationDTO);
-            
-            // Log successful registration
-            securityLogger.info("User '{}' registered successfully from IP: {}", 
-                               user.getUsername(), ipAddress);
-            
-            securityAuditService.logUserRegistration(user.getUsername(), ipAddress, true, null);
-
-            return ResponseEntity.ok(Map.of(
-                "message", "User registered successfully",
-                "userId", user.getId(),
-                "username", user.getUsername()
-            ));
-
-        } catch (SecurityException e) {
-            securityLogger.error("Security violation during registration from IP {}: {}", 
-                                ipAddress, e.getMessage());
-            
-            securityAuditService.logUserRegistration(
-                registrationDTO.getUsername(), ipAddress, false, "Security violation: " + e.getMessage());
-            
-            return ResponseEntity.badRequest().body(Map.of(
-                "error", "Registration failed due to security violation"
-            ));
-            
-        } catch (Exception e) {
-            logger.error("Registration failed for user '{}' from IP {}: {}", 
-                        registrationDTO.getUsername(), ipAddress, e.getMessage());
-            
-            securityAuditService.logUserRegistration(
-                registrationDTO.getUsername(), ipAddress, false, "System error: " + e.getMessage());
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "error", "Registration failed"
-            ));
-        }
-    }
-
-    /**
-     * Enhanced login endpoint with rate limiting and comprehensive security logging.
+     * Enhanced login endpoint with comprehensive security checks.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, 
@@ -167,6 +76,9 @@ public class AuthController {
         String ipAddress = getClientIpAddress(request);
         
         try {
+            // Debug logging
+            logger.info("Login attempt - Username: {}, IP: {}", loginRequest.getUsername(), ipAddress);
+            
             // Check rate limiting first
             if (rateLimitingService.isRateLimited(ipAddress)) {
                 long remainingMinutes = rateLimitingService.getRemainingLockoutMinutes(ipAddress);
@@ -192,7 +104,7 @@ public class AuthController {
             // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(), 
+                    loginRequest.getUsername().trim(), 
                     loginRequest.getPassword()
                 )
             );
@@ -202,43 +114,43 @@ public class AuthController {
 
             // Create secure session
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            HttpSession session = request.getSession(true);
-            
-            // Session security settings
-            session.setMaxInactiveInterval(3600); // 1 hour
-            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-            
-            // Update user's last login
+
+            // Get user details
             CustomUserPrincipal userPrincipal = (CustomUserPrincipal) authentication.getPrincipal();
-            userService.updateLastLogin(userPrincipal.getId());
 
-            // Log successful login
+            // Create session and set attributes
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+            session.setMaxInactiveInterval(3600); // 1 hour
+
+            // Create response
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("sessionId", session.getId());
+            response.put("userId", userPrincipal.getId());
+            response.put("username", userPrincipal.getUsername());
+            response.put("firstname", userPrincipal.getFirstname());
+            response.put("lastname", userPrincipal.getLastname());
+            response.put("email", userPrincipal.getEmail());
+            response.put("roles", userPrincipal.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .collect(Collectors.toList()));
+            response.put("isAdmin", userPrincipal.isAdmin());
+
+            // Log successful authentication
             securityLogger.info("User '{}' logged in successfully from IP: {}", 
-                               loginRequest.getUsername(), ipAddress);
-            
-            securityAuditService.logUserLogin(loginRequest.getUsername(), ipAddress, true, null);
+                               userPrincipal.getUsername(), ipAddress);
 
-            // Return user info
-            return ResponseEntity.ok(Map.of(
-                "message", "Login successful",
-                "sessionId", session.getId(),
-                "userId", userPrincipal.getId(),
-                "username", userPrincipal.getUsername(),
-                "firstname", userPrincipal.getFirstname(),
-                "lastname", userPrincipal.getLastname(),
-                "roles", userPrincipal.getAuthorities().stream()
-                    .map(auth -> auth.getAuthority())
-                    .collect(Collectors.toList()),
-                "isAdmin", userPrincipal.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))
-            ));
+            securityAuditService.logUserLogin(
+                userPrincipal.getUsername(), ipAddress, true, "Login successful");
+
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
-            // Record failed attempt for rate limiting
+            // Record failed attempt
             rateLimitingService.recordFailedAttempt(ipAddress);
             
-            // Log failed attempt
-            securityLogger.warn("Failed login attempt for user '{}' from IP: {} (attempt #{}) - Invalid credentials", 
+            securityLogger.warn("Failed login for user '{}' from IP: {}, attempts: {}", 
                                loginRequest.getUsername(), ipAddress, 
                                rateLimitingService.getAttemptCount(ipAddress));
             
@@ -274,7 +186,7 @@ public class AuthController {
 
         } catch (Exception e) {
             logger.error("Login error for user '{}' from IP {}: {}", 
-                        loginRequest.getUsername(), ipAddress, e.getMessage());
+                        loginRequest.getUsername(), ipAddress, e.getMessage(), e);
             
             securityAuditService.logUserLogin(
                 loginRequest.getUsername(), ipAddress, false, "System error: " + e.getMessage());
@@ -293,7 +205,7 @@ public class AuthController {
         
         String ipAddress = getClientIpAddress(request);
         String username = principal != null ? principal.getName() : "unknown";
-        
+
         try {
             // Invalidate session
             HttpSession session = request.getSession(false);
@@ -304,8 +216,8 @@ public class AuthController {
             // Clear security context
             SecurityContextHolder.clearContext();
 
-            // Log successful logout
-            securityLogger.info("User '{}' logged out successfully from IP: {}", username, ipAddress);
+            // Log logout
+            securityLogger.info("User '{}' logged out from IP: {}", username, ipAddress);
             securityAuditService.logUserLogout(username, ipAddress, true, null);
 
             return ResponseEntity.ok(Map.of("message", "Logout successful"));
@@ -313,54 +225,115 @@ public class AuthController {
         } catch (Exception e) {
             logger.error("Logout error for user '{}' from IP {}: {}", username, ipAddress, e.getMessage());
             securityAuditService.logUserLogout(username, ipAddress, false, e.getMessage());
-            
+            return ResponseEntity.ok(Map.of("message", "Logout completed"));
+        }
+    }
+
+    /**
+     * Get current user information.
+     */
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrentUser(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                "error", "Not authenticated"
+            ));
+        }
+
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            CustomUserPrincipal userPrincipal = (CustomUserPrincipal) authentication.getPrincipal();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("userId", userPrincipal.getId());
+            response.put("username", userPrincipal.getUsername());
+            response.put("firstname", userPrincipal.getFirstname());
+            response.put("lastname", userPrincipal.getLastname());
+            response.put("email", userPrincipal.getEmail());
+            response.put("roles", userPrincipal.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .collect(Collectors.toList()));
+            response.put("isAdmin", userPrincipal.isAdmin());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error getting current user: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "message", "Logout failed"
+                "error", "Failed to get user information"
             ));
         }
     }
 
     /**
-     * Get current authenticated user information with enhanced security validation.
+     * Enhanced user registration with comprehensive validation and security checks.
      */
-    @GetMapping("/current")
-    public ResponseEntity<?> getCurrentUser(Principal principal, HttpServletRequest request) {
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegistrationDTO registrationDTO, 
+                                    BindingResult bindingResult, 
+                                    HttpServletRequest request) {
         
         String ipAddress = getClientIpAddress(request);
-        
+
         try {
-            if (principal == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            // Check validation errors
+            if (bindingResult.hasErrors()) {
+                Map<String, String> errors = new HashMap<>();
+                for (FieldError error : bindingResult.getFieldErrors()) {
+                    errors.put(error.getField(), error.getDefaultMessage());
+                }
+                return ResponseEntity.badRequest().body(Map.of("fieldErrors", errors));
             }
 
-            User user = userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            // Log registration attempt
+            securityLogger.info("Registration attempt for username '{}' from IP: {}", 
+                               registrationDTO.getUsername(), ipAddress);
 
-            // Log access to user info
-            securityLogger.debug("User info accessed by '{}' from IP: {}", user.getUsername(), ipAddress);
+            // Input validation
+            inputValidationService.validateInput(registrationDTO.getUsername(), "username");
+            inputValidationService.validateInput(registrationDTO.getEmail(), "email");
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("userId", user.getId());
-            response.put("username", user.getUsername());
-            response.put("firstname", user.getFirstname());
-            response.put("lastname", user.getLastname());
-            response.put("email", user.getEmail());
-            response.put("roles", user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList()));
-            response.put("isAdmin", userService.isAdmin(user));
-            response.put("lastLogin", user.getLastLogin());
+            // Create user
+            User user = userService.createUser(registrationDTO);
 
-            return ResponseEntity.ok(response);
+            // Log successful registration
+            securityLogger.info("User '{}' registered successfully from IP: {}", 
+                               user.getUsername(), ipAddress);
+
+            securityAuditService.logUserRegistration(
+                user.getUsername(), ipAddress, true, "Registration successful");
+
+            return ResponseEntity.ok(Map.of(
+                "message", "User registered successfully",
+                "username", user.getUsername()
+            ));
+
+        } catch (IllegalArgumentException e) {
+            securityLogger.warn("Registration failed for username '{}' from IP: {}, reason: {}", 
+                               registrationDTO.getUsername(), ipAddress, e.getMessage());
+
+            securityAuditService.logUserRegistration(
+                registrationDTO.getUsername(), ipAddress, false, e.getMessage());
+
+            return ResponseEntity.badRequest().body(Map.of(
+                "error", e.getMessage()
+            ));
 
         } catch (Exception e) {
-            logger.error("Error getting current user info from IP {}: {}", ipAddress, e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            logger.error("Registration error for username '{}' from IP {}: {}", 
+                        registrationDTO.getUsername(), ipAddress, e.getMessage());
+
+            securityAuditService.logUserRegistration(
+                registrationDTO.getUsername(), ipAddress, false, "System error");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "error", "Registration failed"
+            ));
         }
     }
 
     /**
-     * Extract client IP address from request headers.
+     * Get client IP address from request.
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");

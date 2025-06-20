@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,9 +34,11 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Enhanced REST Controller for flower operations with comprehensive security
+ * FIXED: Added CORS support for frontend integration
  */
 @RestController
 @RequestMapping("/api/flowers")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true") // ADDED CORS
 @Validated
 public class FlowerController {
 
@@ -58,6 +61,7 @@ public class FlowerController {
     public ResponseEntity<List<Flower>> getAllFlowers() {
         try {
             List<Flower> flowers = flowerService.getAllFlowers();
+            logger.info("Retrieved {} flowers", flowers.size());
             return ResponseEntity.ok(flowers);
         } catch (Exception e) {
             logger.error("Error retrieving flowers: {}", e.getMessage());
@@ -73,8 +77,13 @@ public class FlowerController {
     public ResponseEntity<Flower> getFlowerById(@PathVariable @Min(1) Long id) {
         try {
             Optional<Flower> flower = flowerService.getFlowerById(id);
-            return flower.map(ResponseEntity::ok)
-                        .orElse(ResponseEntity.notFound().build());
+            if (flower.isPresent()) {
+                logger.info("Retrieved flower with ID: {}", id);
+                return ResponseEntity.ok(flower.get());
+            } else {
+                logger.warn("Flower with ID {} not found", id);
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
             logger.error("Error retrieving flower with ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -82,218 +91,44 @@ public class FlowerController {
     }
 
     /**
-     * Search flowers by name - accessible to authenticated users with input validation
+     * Search flowers by name - accessible to authenticated users
      */
     @GetMapping("/search")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> searchFlowers(
-            @RequestParam @NotBlank @Size(min = 1, max = 100) String name,
-            HttpServletRequest request,
-            Principal principal) {
-        
-        String ipAddress = getClientIpAddress(request);
-        String username = principal.getName();
+    public ResponseEntity<List<Flower>> searchFlowers(
+            @RequestParam(required = false) @Size(min = 1, max = 100) String name,
+            @RequestParam(required = false) @Size(min = 1, max = 50) String color,
+            @RequestParam(required = false) String availability) {
         
         try {
-            // Validate search input for security
-            inputValidationService.validateSearchInput(name);
-            inputValidationService.validateInput(name, "search");
+            List<Flower> flowers;
             
-            List<Flower> flowers = flowerService.searchFlowersByName(name);
+            if (name != null && !name.trim().isEmpty()) {
+                // Input validation
+                inputValidationService.validateInput(name, "name");
+                flowers = flowerService.searchFlowersByName(name.trim());
+                logger.info("Search by name '{}' returned {} results", name, flowers.size());
+            } else if (availability != null && !availability.trim().isEmpty()) {
+                // Input validation
+                inputValidationService.validateInput(availability, "availability");
+                flowers = flowerService.getFlowersByAvailablity(availability.trim());
+                logger.info("Search by availability '{}' returned {} results", availability, flowers.size());
+            } else {
+                // Return all flowers if no search criteria
+                flowers = flowerService.getAllFlowers();
+                logger.info("No search criteria provided, returning all {} flowers", flowers.size());
+            }
             
             return ResponseEntity.ok(flowers);
             
-        } catch (IllegalArgumentException e) {
-            logger.warn("Invalid search input from user '{}' at IP {}: {}", username, ipAddress, e.getMessage());
-            securityAuditService.logSecurityViolation(username, "INVALID_SEARCH", e.getMessage(), ipAddress);
-            
-            return ResponseEntity.badRequest().body(Map.of(
-                "error", "Invalid search term",
-                "message", "Search term contains invalid characters"
-            ));
         } catch (Exception e) {
-            logger.error("Error searching flowers for user '{}': {}", username, e.getMessage());
+            logger.error("Error searching flowers: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
-     * Create new flower - ADMIN ONLY with comprehensive validation and auditing
-     */
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createFlower(
-            @Valid @RequestBody FlowerCreateDTO flowerDTO,
-            HttpServletRequest request,
-            Principal principal) {
-        
-        String ipAddress = getClientIpAddress(request);
-        String username = principal.getName();
-        
-        try {
-            // Additional security validation beyond @Valid
-            inputValidationService.validateInput(flowerDTO.getName(), "name");
-            inputValidationService.validateInput(flowerDTO.getMeaning(), "meaning");
-            inputValidationService.validateInput(flowerDTO.getInfo(), "info");
-            
-            // Convert DTO to entity
-            Flower flower = new Flower();
-            flower.setName(flowerDTO.getName());
-            flower.setMeaning(flowerDTO.getMeaning());
-            flower.setAvailablity(flowerDTO.getAvailability());
-            flower.setInfo(flowerDTO.getInfo());
-            flower.setColor(flowerDTO.getColor());
-            flower.setPrice(flowerDTO.getPrice());
-            flower.setImageUrl(flowerDTO.getImageUrl());
-            
-            Flower savedFlower = flowerService.createFlower(flower);
-            
-            // Log successful creation
-            securityAuditService.logFlowerAction(username, "CREATE", savedFlower.getName(), ipAddress, true, null);
-            
-            logger.info("Flower '{}' created by admin '{}' from IP: {}", 
-                       savedFlower.getName(), username, ipAddress);
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedFlower);
-            
-        } catch (SecurityException e) {
-            securityAuditService.logFlowerAction(username, "CREATE", flowerDTO.getName(), ipAddress, false, e.getMessage());
-            securityAuditService.logSecurityViolation(username, "FLOWER_CREATE_VIOLATION", e.getMessage(), ipAddress);
-            
-            return ResponseEntity.badRequest().body(Map.of(
-                "error", "Security violation",
-                "message", "Input contains potentially dangerous content"
-            ));
-            
-        } catch (Exception e) {
-            logger.error("Error creating flower by admin '{}': {}", username, e.getMessage());
-            securityAuditService.logFlowerAction(username, "CREATE", flowerDTO.getName(), ipAddress, false, e.getMessage());
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "error", "Failed to create flower"
-            ));
-        }
-    }
-
-    /**
-     * Update flower - ADMIN ONLY with comprehensive validation and auditing
-     */
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateFlower(
-            @PathVariable @Min(1) Long id,
-            @Valid @RequestBody FlowerCreateDTO flowerDTO,
-            HttpServletRequest request,
-            Principal principal) {
-        
-        String ipAddress = getClientIpAddress(request);
-        String username = principal.getName();
-        
-        try {
-            // Check if flower exists
-            if (!flowerService.existsById(id)) {
-                return ResponseEntity.notFound().build();
-            }
-            
-            // Additional security validation
-            inputValidationService.validateInput(flowerDTO.getName(), "name");
-            inputValidationService.validateInput(flowerDTO.getMeaning(), "meaning");
-            inputValidationService.validateInput(flowerDTO.getInfo(), "info");
-            
-            // Convert DTO to entity
-            Flower flower = new Flower();
-            flower.setName(flowerDTO.getName());
-            flower.setMeaning(flowerDTO.getMeaning());
-            flower.setAvailablity(flowerDTO.getAvailability());
-            flower.setInfo(flowerDTO.getInfo());
-            flower.setColor(flowerDTO.getColor());
-            flower.setPrice(flowerDTO.getPrice());
-            flower.setImageUrl(flowerDTO.getImageUrl());
-            
-            Optional<Flower> updatedFlower = flowerService.updateFlower(id, flower);
-            
-            if (updatedFlower.isPresent()) {
-                // Log successful update
-                securityAuditService.logFlowerAction(username, "UPDATE", updatedFlower.get().getName(), ipAddress, true, null);
-                
-                logger.info("Flower '{}' (ID: {}) updated by admin '{}' from IP: {}", 
-                           updatedFlower.get().getName(), id, username, ipAddress);
-                
-                return ResponseEntity.ok(updatedFlower.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-            
-        } catch (SecurityException e) {
-            securityAuditService.logFlowerAction(username, "UPDATE", flowerDTO.getName(), ipAddress, false, e.getMessage());
-            securityAuditService.logSecurityViolation(username, "FLOWER_UPDATE_VIOLATION", e.getMessage(), ipAddress);
-            
-            return ResponseEntity.badRequest().body(Map.of(
-                "error", "Security violation",
-                "message", "Input contains potentially dangerous content"
-            ));
-            
-        } catch (Exception e) {
-            logger.error("Error updating flower {} by admin '{}': {}", id, username, e.getMessage());
-            securityAuditService.logFlowerAction(username, "UPDATE", flowerDTO.getName(), ipAddress, false, e.getMessage());
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "error", "Failed to update flower"
-            ));
-        }
-    }
-
-    /**
-     * Delete flower - ADMIN ONLY with auditing
-     */
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteFlower(
-            @PathVariable @Min(1) Long id,
-            HttpServletRequest request,
-            Principal principal) {
-        
-        String ipAddress = getClientIpAddress(request);
-        String username = principal.getName();
-        
-        try {
-            // Get flower name before deletion for logging
-            Optional<Flower> flower = flowerService.getFlowerById(id);
-            if (!flower.isPresent()) {
-                return ResponseEntity.notFound().build();
-            }
-            
-            String flowerName = flower.get().getName();
-            
-            boolean deleted = flowerService.deleteFlower(id);
-            
-            if (deleted) {
-                // Log successful deletion
-                securityAuditService.logFlowerAction(username, "DELETE", flowerName, ipAddress, true, null);
-                
-                logger.info("Flower '{}' (ID: {}) deleted by admin '{}' from IP: {}", 
-                           flowerName, id, username, ipAddress);
-                
-                return ResponseEntity.ok(Map.of(
-                    "message", "Flower deleted successfully",
-                    "deletedFlower", flowerName
-                ));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-            
-        } catch (Exception e) {
-            logger.error("Error deleting flower {} by admin '{}': {}", id, username, e.getMessage());
-            securityAuditService.logFlowerAction(username, "DELETE", "ID:" + id, ipAddress, false, e.getMessage());
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "error", "Failed to delete flower"
-            ));
-        }
-    }
-
-    /**
-     * Get flowers by availability - accessible to authenticated users
+     * Get flowers by availability status
      */
     @GetMapping("/availability/{status}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -301,12 +136,11 @@ public class FlowerController {
             @PathVariable @NotBlank String status) {
         
         try {
-            // Validate availability status
-            if (!status.equals("Available") && !status.equals("Unavailable")) {
-                return ResponseEntity.badRequest().build();
-            }
+            // Input validation
+            inputValidationService.validateInput(status, "availability");
             
             List<Flower> flowers = flowerService.getFlowersByAvailablity(status);
+            logger.info("Retrieved {} flowers with availability '{}'", flowers.size(), status);
             return ResponseEntity.ok(flowers);
             
         } catch (Exception e) {
@@ -315,8 +149,180 @@ public class FlowerController {
         }
     }
 
+    // ========== ADMIN-ONLY ENDPOINTS ==========
+
     /**
-     * Extract client IP address from request headers
+     * Create new flower - ADMIN ONLY
+     */
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Flower> createFlower(@Valid @RequestBody FlowerCreateRequest flowerRequest,
+                                             HttpServletRequest request,
+                                             Principal principal) {
+        
+        String ipAddress = getClientIpAddress(request);
+        String username = principal.getName();
+        
+        try {
+            // Input validation
+            inputValidationService.validateInput(flowerRequest.getName(), "name");
+            inputValidationService.validateInput(flowerRequest.getMeaning(), "meaning");
+            inputValidationService.validateInput(flowerRequest.getColor(), "color");
+            inputValidationService.validateInput(flowerRequest.getInfo(), "info");
+            
+            // Convert DTO to entity
+            Flower flower = new Flower();
+            flower.setName(flowerRequest.getName().trim());
+            flower.setMeaning(flowerRequest.getMeaning().trim());
+            flower.setAvailablity(flowerRequest.getAvailability().trim()); // Note: backend uses 'availablity'
+            flower.setInfo(flowerRequest.getInfo().trim());
+            flower.setColor(flowerRequest.getColor().trim());
+            flower.setPrice(flowerRequest.getPrice().intValue());
+            flower.setImageUrl(flowerRequest.getImageUrl().trim());
+            
+            Flower createdFlower = flowerService.createFlower(flower);
+            
+            logger.info("Admin '{}' created flower '{}' from IP: {}", username, createdFlower.getName(), ipAddress);
+            securityAuditService.logFlowerAction(username, "CREATE", createdFlower.getName(), ipAddress, true, null);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdFlower);
+            
+        } catch (SecurityException e) {
+            logger.warn("Security violation during flower creation by '{}' from IP {}: {}", username, ipAddress, e.getMessage());
+            securityAuditService.logFlowerAction(username, "CREATE", "unknown", ipAddress, false, e.getMessage());
+            return ResponseEntity.badRequest().build();
+            
+        } catch (Exception e) {
+            logger.error("Error creating flower by '{}' from IP {}: {}", username, ipAddress, e.getMessage());
+            securityAuditService.logFlowerAction(username, "CREATE", "unknown", ipAddress, false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Update existing flower - ADMIN ONLY
+     */
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Flower> updateFlower(@PathVariable @Min(1) Long id,
+                                             @Valid @RequestBody FlowerCreateRequest flowerRequest,
+                                             HttpServletRequest request,
+                                             Principal principal) {
+        
+        String ipAddress = getClientIpAddress(request);
+        String username = principal.getName();
+        
+        try {
+            // Input validation
+            inputValidationService.validateInput(flowerRequest.getName(), "name");
+            inputValidationService.validateInput(flowerRequest.getMeaning(), "meaning");
+            inputValidationService.validateInput(flowerRequest.getColor(), "color");
+            inputValidationService.validateInput(flowerRequest.getInfo(), "info");
+            
+            // Convert DTO to entity
+            Flower flowerUpdate = new Flower();
+            flowerUpdate.setName(flowerRequest.getName().trim());
+            flowerUpdate.setMeaning(flowerRequest.getMeaning().trim());
+            flowerUpdate.setAvailablity(flowerRequest.getAvailability().trim()); // Note: backend uses 'availablity'
+            flowerUpdate.setInfo(flowerRequest.getInfo().trim());
+            flowerUpdate.setColor(flowerRequest.getColor().trim());
+            flowerUpdate.setPrice(flowerRequest.getPrice().intValue());
+            flowerUpdate.setImageUrl(flowerRequest.getImageUrl().trim());
+            
+            Optional<Flower> updatedFlower = flowerService.updateFlower(id, flowerUpdate);
+            
+            if (updatedFlower.isPresent()) {
+                logger.info("Admin '{}' updated flower '{}' (ID: {}) from IP: {}", username, updatedFlower.get().getName(), id, ipAddress);
+                securityAuditService.logFlowerAction(username, "UPDATE", updatedFlower.get().getName(), ipAddress, true, null);
+                return ResponseEntity.ok(updatedFlower.get());
+            } else {
+                logger.warn("Flower with ID {} not found for update by '{}' from IP: {}", id, username, ipAddress);
+                securityAuditService.logFlowerAction(username, "UPDATE", "ID:" + id, ipAddress, false, "Flower not found");
+                return ResponseEntity.notFound().build();
+            }
+            
+        } catch (SecurityException e) {
+            logger.warn("Security violation during flower update by '{}' from IP {}: {}", username, ipAddress, e.getMessage());
+            securityAuditService.logFlowerAction(username, "UPDATE", "ID:" + id, ipAddress, false, e.getMessage());
+            return ResponseEntity.badRequest().build();
+            
+        } catch (Exception e) {
+            logger.error("Error updating flower ID {} by '{}' from IP {}: {}", id, username, ipAddress, e.getMessage());
+            securityAuditService.logFlowerAction(username, "UPDATE", "ID:" + id, ipAddress, false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Delete flower - ADMIN ONLY
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteFlower(@PathVariable @Min(1) Long id,
+                                        HttpServletRequest request,
+                                        Principal principal) {
+        
+        String ipAddress = getClientIpAddress(request);
+        String username = principal.getName();
+        
+        try {
+            // Get flower name before deletion for logging
+            Optional<Flower> flowerToDelete = flowerService.getFlowerById(id);
+            String flowerName = flowerToDelete.map(Flower::getName).orElse("ID:" + id);
+            
+            boolean deleted = flowerService.deleteFlower(id);
+            
+            if (deleted) {
+                logger.info("Admin '{}' deleted flower '{}' (ID: {}) from IP: {}", username, flowerName, id, ipAddress);
+                securityAuditService.logFlowerAction(username, "DELETE", flowerName, ipAddress, true, null);
+                return ResponseEntity.ok(Map.of("message", "Flower deleted successfully"));
+            } else {
+                logger.warn("Flower with ID {} not found for deletion by '{}' from IP: {}", id, username, ipAddress);
+                securityAuditService.logFlowerAction(username, "DELETE", "ID:" + id, ipAddress, false, "Flower not found");
+                return ResponseEntity.notFound().build();
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error deleting flower ID {} by '{}' from IP {}: {}", id, username, ipAddress, e.getMessage());
+            securityAuditService.logFlowerAction(username, "DELETE", "ID:" + id, ipAddress, false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Get flower statistics - ADMIN ONLY
+     */
+    @GetMapping("/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> getFlowerStatistics() {
+        try {
+            List<Flower> allFlowers = flowerService.getAllFlowers();
+            
+            long totalFlowers = allFlowers.size();
+            long availableFlowers = allFlowers.stream()
+                .filter(f -> "Available".equals(f.getAvailablity()))
+                .count();
+            long unavailableFlowers = totalFlowers - availableFlowers;
+            
+            Map<String, Object> stats = Map.of(
+                "totalFlowers", totalFlowers,
+                "availableFlowers", availableFlowers,
+                "unavailableFlowers", unavailableFlowers,
+                "availabilityPercentage", totalFlowers > 0 ? (availableFlowers * 100.0 / totalFlowers) : 0
+            );
+            
+            return ResponseEntity.ok(stats);
+            
+        } catch (Exception e) {
+            logger.error("Error retrieving flower statistics: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // ========== UTILITY METHODS ==========
+
+    /**
+     * Extract client IP address from request.
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
@@ -330,5 +336,60 @@ public class FlowerController {
         }
         
         return request.getRemoteAddr();
+    }
+
+    /**
+     * DTO for flower creation/update requests
+     */
+    public static class FlowerCreateRequest {
+        @NotBlank(message = "Name is required")
+        @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+        private String name;
+
+        @NotBlank(message = "Meaning is required")
+        @Size(min = 5, max = 500, message = "Meaning must be between 5 and 500 characters")
+        private String meaning;
+
+        @NotBlank(message = "Availability is required")
+        private String availability;
+
+        @NotBlank(message = "Info is required")
+        @Size(min = 10, max = 1000, message = "Info must be between 10 and 1000 characters")
+        private String info;
+
+        @NotBlank(message = "Color is required")
+        @Size(min = 2, max = 50, message = "Color must be between 2 and 50 characters")
+        private String color;
+
+        @Min(value = 1, message = "Price must be at least 1")
+        private Double price;
+
+        @NotBlank(message = "Image URL is required")
+        @Size(max = 500, message = "Image URL cannot exceed 500 characters")
+        private String imageUrl;
+
+        // Constructors, getters, setters
+        public FlowerCreateRequest() {}
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getMeaning() { return meaning; }
+        public void setMeaning(String meaning) { this.meaning = meaning; }
+
+        public String getAvailability() { return availability; }
+        public void setAvailability(String availability) { this.availability = availability; }
+
+        public String getInfo() { return info; }
+        public void setInfo(String info) { this.info = info; }
+
+        public String getColor() { return color; }
+        public void setColor(String color) { this.color = color; }
+
+        public Double getPrice() { return price; }
+        public void setPrice(Double price) { this.price = price; }
+
+        public String getImageUrl() { return imageUrl; }
+        public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     }
 }
