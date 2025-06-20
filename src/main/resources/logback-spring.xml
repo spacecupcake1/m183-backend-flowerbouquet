@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Console appender for development -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application log file appender -->
+    <appender name="APPLICATION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Daily rollover with size limit -->
+            <fileNamePattern>logs/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- Each file should be at most 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- Keep 30 days worth of logs -->
+            <maxHistory>30</maxHistory>
+            <!-- Total size cap of 1GB -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Security events log file appender -->
+    <appender name="SECURITY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/security.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/security.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>90</maxHistory> <!-- Keep security logs longer -->
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [SECURITY] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Audit events log file appender -->
+    <appender name="AUDIT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/audit.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/audit.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>365</maxHistory> <!-- Keep audit logs for a year -->
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [AUDIT] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Security logger - captures authentication and authorization events -->
+    <logger name="com.bbzbl.flowerbouquet.security" level="INFO" additivity="false">
+        <appender-ref ref="SECURITY_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Audit logger - captures user actions and data changes -->
+    <logger name="AUDIT" level="INFO" additivity="false">
+        <appender-ref ref="AUDIT_FILE"/>
+    </logger>
+
+    <!-- Spring Security logging -->
+    <logger name="org.springframework.security" level="DEBUG" additivity="false">
+        <appender-ref ref="SECURITY_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- SQL logging (for debugging - set to DEBUG only in development) -->
+    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
+        <appender-ref ref="APPLICATION_FILE"/>
+    </logger>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="APPLICATION_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Profile-specific configurations -->
+    <springProfile name="dev">
+        <!-- More verbose logging in development -->
+        <logger name="com.bbzbl.flowerbouquet" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <!-- Less console output in production -->
+        <root level="WARN">
+            <appender-ref ref="APPLICATION_FILE"/>
+        </root>
+        <!-- But keep security logging at INFO level -->
+        <logger name="com.bbzbl.flowerbouquet.security" level="INFO" additivity="false">
+            <appender-ref ref="SECURITY_FILE"/>
+        </logger>
+    </springProfile>
+</configuration>

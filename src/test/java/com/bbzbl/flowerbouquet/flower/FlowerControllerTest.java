@@ -1,18 +1,18 @@
 package com.bbzbl.flowerbouquet.flower;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 public class FlowerControllerTest {
 
@@ -39,7 +39,8 @@ public class FlowerControllerTest {
         when(flowerService.getAllFlowers()).thenReturn(flowers);
 
         // Call the method to be tested
-        List<Flower> result = flowerController.getAllFlowers();
+        ResponseEntity<List<Flower>> response = flowerController.getAllFlowers();
+        List<Flower> result = response.getBody();
         
         // Assert that the result is as expected
         assertThat(result).hasSize(1);

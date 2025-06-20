@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.bbzbl.flowerbouquet.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,12 @@ public class Role {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
     
+    /**
+     * FIXED: Break circular reference by ignoring users in JSON serialization
+     * We don't need to expose all users when serializing a role
+     */
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore // Prevent circular reference User -> Role -> User
     private Set<User> users = new HashSet<>();
     
     // Constructors
@@ -51,6 +57,9 @@ public class Role {
         this.name = name;
     }
     
+    /**
+     * Internal getter for users (not exposed via JSON)
+     */
     public Set<User> getUsers() {
         return users;
     }
