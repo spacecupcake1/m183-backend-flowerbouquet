@@ -1,0 +1,1412 @@
+2025-06-20 15:17:12.645 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2025-06-20 15:17:12.737 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 26912 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-20 15:17:12.741 [restartedMain] DEBUG c.b.f.FlowerbouquetApplication - Running with Spring Boot v3.2.5, Spring v6.1.6
+2025-06-20 15:17:12.744 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-20 15:17:12.854 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-20 15:17:12.855 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-20 15:17:13.182 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.bbzbl.flowerbouquet.FlowerbouquetApplication]
+2025-06-20 15:17:13.755 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [com.bbzbl.flowerbouquet.FlowerbouquetApplication]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:179)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:416)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:289)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:788)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:606)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.bbzbl.flowerbouquet.FlowerbouquetApplication.main(FlowerbouquetApplication.java:12)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'globalExceptionHandler' for bean class [com.bbzbl.flowerbouquet.GlobalExceptionHandler] conflicts with existing, non-compatible bean definition of same name and class [com.bbzbl.flowerbouquet.exception.GlobalExceptionHandler]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:361)
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:288)
+	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:128)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:306)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:246)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:197)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:165)
+	... 18 common frames omitted
+2025-06-20 15:19:59.687 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2025-06-20 15:19:59.801 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 28340 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-20 15:19:59.806 [restartedMain] DEBUG c.b.f.FlowerbouquetApplication - Running with Spring Boot v3.2.5, Spring v6.1.6
+2025-06-20 15:19:59.813 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-20 15:19:59.949 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-20 15:19:59.950 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-20 15:20:01.768 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-20 15:20:01.914 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 124 ms. Found 3 JPA repository interfaces.
+2025-06-20 15:20:02.682 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-20 15:20:02.711 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-20 15:20:03.654 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-20 15:20:03.732 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-20 15:20:03.740 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-20 15:20:03.750 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-20 15:20:03.930 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-20 15:20:03.932 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3980 ms
+2025-06-20 15:20:04.072 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-20 15:20:04.548 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:flowershop user=SA
+2025-06-20 15:20:04.554 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-20 15:20:04.585 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-20 15:20:04.961 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+2025-06-20 15:20:04.962 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+2025-06-20 15:20:04.963 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - 
+2025-06-20 15:20:05.036 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-20 15:20:05.043 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-20 15:20:05.074 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2025-06-20 15:20:05.078 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.015s)
+2025-06-20 15:20:05.080 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-20 15:20:05.096 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-06-20 15:20:05.146 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "PUBLIC": << Empty Schema >>
+2025-06-20 15:20:05.154 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "PUBLIC" is up to date. No migration necessary.
+2025-06-20 15:20:05.357 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-20 15:20:05.498 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-20 15:20:05.600 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-20 15:20:06.273 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-20 15:20:06.397 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-20 15:20:08.472 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-20 15:20:08.506 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table flower (
+        id bigint generated by default as identity,
+        availablity varchar(100),
+        color varchar(100) not null,
+        image_url varchar(500) not null,
+        info varchar(1000),
+        meaning varchar(1000),
+        name varchar(100) not null,
+        price integer not null check ((price>=1) and (price<=9999)),
+        primary key (id)
+    )
+2025-06-20 15:20:08.515 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table roles (
+        id bigint generated by default as identity,
+        name varchar(255) not null,
+        primary key (id)
+    )
+2025-06-20 15:20:08.516 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table user_roles (
+        user_id bigint not null,
+        role_id bigint not null,
+        primary key (user_id, role_id)
+    )
+2025-06-20 15:20:08.518 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table users (
+        id bigint generated by default as identity,
+        account_locked_until timestamp(6),
+        account_non_expired boolean,
+        account_non_locked boolean,
+        created_at timestamp(6),
+        credentials_non_expired boolean,
+        email varchar(100) not null,
+        email_verified boolean,
+        enabled boolean,
+        failed_login_attempts integer,
+        firstname varchar(50),
+        last_failed_login timestamp(6),
+        last_login timestamp(6),
+        lastname varchar(50),
+        password varchar(60) not null,
+        updated_at timestamp(6),
+        username varchar(50) not null,
+        primary key (id)
+    )
+2025-06-20 15:20:08.521 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       drop constraint if exists UK_ofx66keruapi6vyqpv6f2or37
+2025-06-20 15:20:08.522 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       add constraint UK_ofx66keruapi6vyqpv6f2or37 unique (name)
+2025-06-20 15:20:08.523 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UKr43af9ap4edm43mmtq01oddj6
+2025-06-20 15:20:08.523 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+2025-06-20 15:20:08.524 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+2025-06-20 15:20:08.525 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2025-06-20 15:20:08.526 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 
+       foreign key (role_id) 
+       references roles
+2025-06-20 15:20:08.531 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKhfh9dx7w3ubf1co1vdev94g3f 
+       foreign key (user_id) 
+       references users
+2025-06-20 15:20:08.534 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-20 15:20:09.119 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-20 15:20:11.438 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController': Unsatisfied dependency expressed through field 'authenticationManager': Error creating bean with name 'securityConfig': Unsatisfied dependency expressed through field 'cspHeaderWriter': No qualifying bean of type 'com.bbzbl.flowerbouquet.security.SecurityHeadersConfig$ContentSecurityPolicyHeaderWriter' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2025-06-20 15:20:11.448 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-20 15:20:11.474 [restartedMain] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-20 15:20:11.484 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-06-20 15:20:11.492 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-06-20 15:20:11.506 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-06-20 15:20:11.550 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-06-20 15:20:11.632 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field cspHeaderWriter in com.bbzbl.flowerbouquet.security.SecurityConfig required a bean of type 'com.bbzbl.flowerbouquet.security.SecurityHeadersConfig$ContentSecurityPolicyHeaderWriter' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.bbzbl.flowerbouquet.security.SecurityHeadersConfig$ContentSecurityPolicyHeaderWriter' in your configuration.
+
+2025-06-20 15:26:56.830 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2025-06-20 15:26:56.942 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 18368 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-20 15:26:56.945 [restartedMain] DEBUG c.b.f.FlowerbouquetApplication - Running with Spring Boot v3.2.5, Spring v6.1.6
+2025-06-20 15:26:56.948 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-20 15:26:57.137 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-20 15:26:57.138 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-20 15:26:58.793 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-20 15:26:58.951 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 138 ms. Found 3 JPA repository interfaces.
+2025-06-20 15:26:59.890 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-20 15:26:59.906 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-20 15:27:00.811 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-20 15:27:00.867 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-20 15:27:00.876 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-20 15:27:00.883 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-20 15:27:01.085 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-20 15:27:01.088 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3948 ms
+2025-06-20 15:27:01.184 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-20 15:27:01.761 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:flowershop user=SA
+2025-06-20 15:27:01.777 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-20 15:27:01.821 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-20 15:27:02.245 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+2025-06-20 15:27:02.247 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+2025-06-20 15:27:02.248 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - 
+2025-06-20 15:27:02.415 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-20 15:27:02.444 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-20 15:27:02.494 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2025-06-20 15:27:02.501 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.017s)
+2025-06-20 15:27:02.503 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-20 15:27:02.534 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-06-20 15:27:02.674 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "PUBLIC": << Empty Schema >>
+2025-06-20 15:27:02.708 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "PUBLIC" is up to date. No migration necessary.
+2025-06-20 15:27:03.036 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-20 15:27:03.243 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-20 15:27:03.374 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-20 15:27:04.281 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-20 15:27:04.402 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-20 15:27:06.864 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-20 15:27:06.906 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table flower (
+        id bigint generated by default as identity,
+        availablity varchar(100),
+        color varchar(100) not null,
+        image_url varchar(500) not null,
+        info varchar(1000),
+        meaning varchar(1000),
+        name varchar(100) not null,
+        price integer not null check ((price>=1) and (price<=9999)),
+        primary key (id)
+    )
+2025-06-20 15:27:06.916 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table roles (
+        id bigint generated by default as identity,
+        name varchar(255) not null,
+        primary key (id)
+    )
+2025-06-20 15:27:06.918 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table user_roles (
+        user_id bigint not null,
+        role_id bigint not null,
+        primary key (user_id, role_id)
+    )
+2025-06-20 15:27:06.920 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table users (
+        id bigint generated by default as identity,
+        account_locked_until timestamp(6),
+        account_non_expired boolean,
+        account_non_locked boolean,
+        created_at timestamp(6),
+        credentials_non_expired boolean,
+        email varchar(100) not null,
+        email_verified boolean,
+        enabled boolean,
+        failed_login_attempts integer,
+        firstname varchar(50),
+        last_failed_login timestamp(6),
+        last_login timestamp(6),
+        lastname varchar(50),
+        password varchar(60) not null,
+        updated_at timestamp(6),
+        username varchar(50) not null,
+        primary key (id)
+    )
+2025-06-20 15:27:06.923 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       drop constraint if exists UK_ofx66keruapi6vyqpv6f2or37
+2025-06-20 15:27:06.924 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       add constraint UK_ofx66keruapi6vyqpv6f2or37 unique (name)
+2025-06-20 15:27:06.927 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UKr43af9ap4edm43mmtq01oddj6
+2025-06-20 15:27:06.927 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+2025-06-20 15:27:06.929 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+2025-06-20 15:27:06.931 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2025-06-20 15:27:06.932 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 
+       foreign key (role_id) 
+       references roles
+2025-06-20 15:27:06.940 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKhfh9dx7w3ubf1co1vdev94g3f 
+       foreign key (user_id) 
+       references users
+2025-06-20 15:27:06.946 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-20 15:27:07.577 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-20 15:27:09.046 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-20 15:27:10.319 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-20 15:27:10.369 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-20 15:27:10.427 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-20 15:27:10.453 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 14.601 seconds (process running for 15.622)
+2025-06-20 15:27:10.696 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:27:10.782 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+2025-06-20 15:27:10.843 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:27:10.846 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+2025-06-20 15:27:10.856 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:27:11.409 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (account_locked_until, account_non_expired, account_non_locked, created_at, credentials_non_expired, email, email_verified, enabled, failed_login_attempts, firstname, last_failed_login, last_login, lastname, password, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.420 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:27:11.422 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:27:11.429 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:27:11.443 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:27:11.447 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:27:11.457 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2025-06-20 15:27:11.499 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        flower f1_0
+2025-06-20 15:27:11.510 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.513 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.519 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.524 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.526 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.530 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.534 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.538 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.542 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.546 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.548 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.551 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.556 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.558 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.563 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.565 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.569 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.572 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.574 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:27:11.576 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:49:44.466 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-20 15:49:44.467 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-06-20 15:49:44.469 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-06-20 15:49:44.800 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:49:45.101 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:04.286 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:04.559 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:34.678 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:35.198 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:45.827 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:46.198 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:50:59.790 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:51:00.324 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:51:08.662 [http-nio-8080-exec-10] INFO  SECURITY - Registration attempt for username 'testuser' from IP: 0:0:0:0:0:0:0:1
+2025-06-20 15:51:08.668 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+2025-06-20 15:51:08.672 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+2025-06-20 15:51:09.038 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:51:09.042 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (account_locked_until, account_non_expired, account_non_locked, created_at, credentials_non_expired, email, email_verified, enabled, failed_login_attempts, firstname, last_failed_login, last_login, lastname, password, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:51:09.046 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:51:09.048 [http-nio-8080-exec-10] INFO  SECURITY - User 'testuser' registered successfully from IP: 0:0:0:0:0:0:0:1
+2025-06-20 15:51:13.560 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:51:14.088 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:51:43.798 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:51:44.144 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:52:15.030 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-20 15:52:15.040 [SpringApplicationShutdownHook] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-20 15:52:15.041 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-06-20 15:52:15.044 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-06-20 15:52:24.512 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2025-06-20 15:52:24.563 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 22384 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-20 15:52:24.564 [restartedMain] DEBUG c.b.f.FlowerbouquetApplication - Running with Spring Boot v3.2.5, Spring v6.1.6
+2025-06-20 15:52:24.565 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-20 15:52:24.626 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-20 15:52:24.627 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-20 15:52:26.110 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-20 15:52:26.236 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 110 ms. Found 3 JPA repository interfaces.
+2025-06-20 15:52:26.929 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-20 15:52:26.960 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-20 15:52:28.246 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-20 15:52:28.275 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-20 15:52:28.284 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-20 15:52:28.285 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-20 15:52:28.470 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-20 15:52:28.472 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3845 ms
+2025-06-20 15:52:28.604 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-20 15:52:29.248 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:flowershop user=SA
+2025-06-20 15:52:29.256 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-20 15:52:29.293 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-20 15:52:29.830 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+2025-06-20 15:52:29.832 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+2025-06-20 15:52:29.835 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - 
+2025-06-20 15:52:29.968 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-20 15:52:29.983 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-20 15:52:30.032 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2025-06-20 15:52:30.040 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.023s)
+2025-06-20 15:52:30.042 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-20 15:52:30.066 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-06-20 15:52:30.158 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "PUBLIC": << Empty Schema >>
+2025-06-20 15:52:30.175 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "PUBLIC" is up to date. No migration necessary.
+2025-06-20 15:52:30.397 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-20 15:52:30.573 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-20 15:52:30.695 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-20 15:52:31.274 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-20 15:52:31.404 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-20 15:52:33.146 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-20 15:52:33.178 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table flower (
+        id bigint generated by default as identity,
+        availablity varchar(100),
+        color varchar(100) not null,
+        image_url varchar(500) not null,
+        info varchar(1000),
+        meaning varchar(1000),
+        name varchar(100) not null,
+        price integer not null check ((price>=1) and (price<=9999)),
+        primary key (id)
+    )
+2025-06-20 15:52:33.186 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table roles (
+        id bigint generated by default as identity,
+        name varchar(255) not null,
+        primary key (id)
+    )
+2025-06-20 15:52:33.188 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table user_roles (
+        user_id bigint not null,
+        role_id bigint not null,
+        primary key (user_id, role_id)
+    )
+2025-06-20 15:52:33.190 [restartedMain] DEBUG org.hibernate.SQL - 
+    create table users (
+        id bigint generated by default as identity,
+        account_locked_until timestamp(6),
+        account_non_expired boolean,
+        account_non_locked boolean,
+        created_at timestamp(6),
+        credentials_non_expired boolean,
+        email varchar(100) not null,
+        email_verified boolean,
+        enabled boolean,
+        failed_login_attempts integer,
+        firstname varchar(50),
+        last_failed_login timestamp(6),
+        last_login timestamp(6),
+        lastname varchar(50),
+        password varchar(60) not null,
+        updated_at timestamp(6),
+        username varchar(50) not null,
+        primary key (id)
+    )
+2025-06-20 15:52:33.192 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       drop constraint if exists UK_ofx66keruapi6vyqpv6f2or37
+2025-06-20 15:52:33.194 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists roles 
+       add constraint UK_ofx66keruapi6vyqpv6f2or37 unique (name)
+2025-06-20 15:52:33.196 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UKr43af9ap4edm43mmtq01oddj6
+2025-06-20 15:52:33.197 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+2025-06-20 15:52:33.198 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+2025-06-20 15:52:33.198 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists users 
+       add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2025-06-20 15:52:33.199 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 
+       foreign key (role_id) 
+       references roles
+2025-06-20 15:52:33.204 [restartedMain] DEBUG org.hibernate.SQL - 
+    alter table if exists user_roles 
+       add constraint FKhfh9dx7w3ubf1co1vdev94g3f 
+       foreign key (user_id) 
+       references users
+2025-06-20 15:52:33.207 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-20 15:52:33.938 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-20 15:52:35.257 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-20 15:52:36.409 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-20 15:52:36.447 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-20 15:52:36.491 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-20 15:52:36.514 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 12.544 seconds (process running for 13.288)
+2025-06-20 15:52:36.722 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:52:36.814 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+2025-06-20 15:52:36.853 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:52:36.855 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+2025-06-20 15:52:36.866 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:52:37.305 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (account_locked_until, account_non_expired, account_non_locked, created_at, credentials_non_expired, email, email_verified, enabled, failed_login_attempts, firstname, last_failed_login, last_login, lastname, password, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.317 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:52:37.319 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:52:37.335 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        flower f1_0
+2025-06-20 15:52:37.360 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.364 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.366 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.368 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.371 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.373 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.376 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.378 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.380 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.382 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.384 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.387 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.390 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.392 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.395 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.397 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.399 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.401 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.405 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.408 [restartedMain] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        flower
+        (availablity, color, image_url, info, meaning, name, price, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:37.415 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:52:37.425 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:52:37.430 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:52:37.441 [restartedMain] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.user_id=?
+2025-06-20 15:52:43.587 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-20 15:52:43.588 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-06-20 15:52:43.590 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-06-20 15:52:43.781 [http-nio-8080-exec-2] INFO  SECURITY - Registration attempt for username 'testuser' from IP: 0:0:0:0:0:0:0:1
+2025-06-20 15:52:43.790 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.username=? 
+    fetch
+        first ? rows only
+2025-06-20 15:52:43.795 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+2025-06-20 15:52:44.121 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        r1_0.name=?
+2025-06-20 15:52:44.123 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (account_locked_until, account_non_expired, account_non_locked, created_at, credentials_non_expired, email, email_verified, enabled, failed_login_attempts, firstname, last_failed_login, last_login, lastname, password, updated_at, username, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-06-20 15:52:44.124 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+2025-06-20 15:52:44.125 [http-nio-8080-exec-2] INFO  SECURITY - User 'testuser' registered successfully from IP: 0:0:0:0:0:0:0:1
+2025-06-20 15:52:48.470 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-06-20 15:52:48.760 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked_until,
+        u1_0.account_non_expired,
+        u1_0.account_non_locked,
+        u1_0.created_at,
+        u1_0.credentials_non_expired,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.enabled,
+        u1_0.failed_login_attempts,
+        u1_0.firstname,
+        u1_0.last_failed_login,
+        u1_0.last_login,
+        u1_0.lastname,
+        u1_0.password,
+        u1_0.updated_at,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?

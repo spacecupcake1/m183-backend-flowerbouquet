@@ -16,13 +16,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.XContentTypeOptionsHeaderWriter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Corrected Security configuration with proper dependency injection.
- * PasswordEncoder is injected from PasswordConfig to avoid circular dependencies.
+ * Complete Security configuration with all enhanced security features
  */
 @Configuration
 @EnableWebSecurity
@@ -33,14 +36,19 @@ public class SecurityConfig {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Injected from PasswordConfig
+    private PasswordEncoder passwordEncoder;
 
-    // These are automatically found because they're @Component annotated
     @Autowired
     private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
     private CustomAuthenticationFailureHandler authenticationFailureHandler;
+
+    @Autowired
+    private SecurityHeadersConfig.ContentSecurityPolicyHeaderWriter cspHeaderWriter;
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     /**
      * Authentication manager for handling authentication requests.
@@ -57,85 +65,90 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder); // Use autowired PasswordEncoder
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
     /**
-     * Main security filter chain configuration.
+     * Complete security filter chain with all security features.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // Disable CSRF for REST API (using session-based auth with same-origin policy)
+            .csrf(csrf -> csrf.disable())
+            
             // CORS configuration
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
-            // CSRF protection (disabled for API)
-            .csrf(csrf -> csrf.disable())
+            // Add custom security filter before authentication
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             
-            // Basic security headers
-            .headers(headers -> headers
-                .frameOptions().deny()
-                .contentTypeOptions().and()
-                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true) // Note: includeSubDomains, not includeSubdomains
-                    .preload(true)
-                )
-                .contentSecurityPolicy("default-src 'self'; " +
-                                    "script-src 'self' 'unsafe-inline'; " +
-                                    "style-src 'self' 'unsafe-inline'; " +
-                                    "img-src 'self' data: https:; " +
-                                    "font-src 'self'; " +
-                                    "connect-src 'self'")
-            )
-            
-            // Authorization rules
+            // Request authorization configuration
             .authorizeHttpRequests(authz -> authz
                 // Public endpoints
-                .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                .requestMatchers("/error", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()
+                .requestMatchers("/images/**", "/css/**", "/js/**", "/assets/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/users/current").authenticated()
                 
-                // Public flower viewing endpoints
-                .requestMatchers(HttpMethod.GET, "/api/flowers", "/api/flowers/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/flowers/search").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/flowers/filter").permitAll()
+                // Flower endpoints - require authentication
+                .requestMatchers(HttpMethod.GET, "/api/flowers", "/api/flowers/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/flowers/search").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/flowers/availability/**").hasAnyRole("USER", "ADMIN")
                 
-                // Cart/customize endpoints (authenticated users)
-                .requestMatchers("/api/flowers/customize/**").authenticated()
-                
-                // Admin flower management endpoints
+                // Admin-only endpoints for flower management
                 .requestMatchers(HttpMethod.POST, "/api/flowers").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/flowers/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/flowers/**").hasRole("ADMIN")
-                .requestMatchers("/api/flowers/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/flowers/bulk").hasRole("ADMIN")
                 
-                // Admin endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
+                // Development endpoints (H2 console) - REMOVE IN PRODUCTION
+                .requestMatchers("/h2-console/**").permitAll()
                 
-                // Moderator or Admin endpoints
-                .requestMatchers("/api/moderator/**").hasAnyRole("MODERATOR", "ADMIN")
+                // Management endpoints
+                .requestMatchers("/management/health").permitAll()
                 
-                // Authenticated user endpoints
-                .requestMatchers("/api/users/current", "/api/users/logout").authenticated()
-                .requestMatchers("/api/users/profile/**").authenticated()
-                
-                // Default: permit all other requests
-                .anyRequest().permitAll()
+                // All other requests require authentication
+                .anyRequest().authenticated()
             )
             
-            // Session management
+            // Enhanced security headers
+            .headers(headers -> headers
+                .frameOptions().sameOrigin() // Allow same origin for H2 console in dev
+                .contentTypeOptions().and()
+                .httpStrictTransportSecurity(hstsConfig -> hstsConfig
+                    .maxAgeInSeconds(31536000)
+                    .includeSubDomains(true)
+                    .preload(true)
+                )
+                .addHeaderWriter(cspHeaderWriter)
+                .addHeaderWriter(new ReferrerPolicyHeaderWriter(
+                    ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                .addHeaderWriter(new XContentTypeOptionsHeaderWriter())
+                .addHeaderWriter(new XXssProtectionHeaderWriter())
+            )
+            
+            // Session management configuration
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .sessionFixation().migrateSession()
                 .maximumSessions(3)
                 .maxSessionsPreventsLogin(false)
+                .and()
+                .invalidSessionUrl("/login?expired=true")
             )
             
-            // Authentication configuration
+            // Authentication provider
             .authenticationProvider(authenticationProvider())
+            
+            // Form login configuration
+            .formLogin(form -> form
+                .loginProcessingUrl("/api/users/login")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .permitAll()
+            )
             
             // Logout configuration
             .logout(logout -> logout
@@ -143,10 +156,12 @@ public class SecurityConfig {
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.setStatus(200);
                     response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
                     response.getWriter().write("{\"message\":\"Logout successful\"}");
                 })
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID", "FLOWERSESSIONID")
+                .clearAuthentication(true)
                 .permitAll()
             )
             
@@ -155,12 +170,14 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(401);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\":\"Authentication required\"}");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"error\":\"Authentication required\",\"message\":\"Please log in to access this resource\"}");
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(403);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\":\"Access denied\"}");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"error\":\"Access denied\",\"message\":\"You don't have permission to access this resource\"}");
                 })
             );
 
@@ -174,17 +191,21 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
+        // Allow specific origins (update for production)
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:4200",
             "https://localhost:4200",
-            "http://127.0.0.1:4200"
+            "http://127.0.0.1:4200",
+            "http://localhost:3000",
+            "https://yourdomain.com" // Add your production domain
         ));
         
+        // Allow specific HTTP methods
         configuration.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
         ));
         
-        // Expanded allowed headers to include common headers and the problematic one
+        // Allow specific headers
         configuration.setAllowedHeaders(Arrays.asList(
             "Authorization", 
             "Content-Type", 
@@ -193,16 +214,21 @@ public class SecurityConfig {
             "Origin",
             "Access-Control-Request-Method",
             "Access-Control-Request-Headers",
-            "X-Content-Type-Options",  // Add the problematic header
+            "X-Content-Type-Options",
             "Cache-Control",
             "Pragma",
             "Expires",
             "X-Frame-Options",
-            "X-XSS-Protection"
+            "X-XSS-Protection",
+            "X-CSRF-TOKEN"
         ));
         
-        // You can also use "*" for all headers (less secure but more permissive)
-        // configuration.setAllowedHeaders(Arrays.asList("*"));
+        // Expose headers that frontend can read
+        configuration.setExposedHeaders(Arrays.asList(
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials",
+            "X-Content-Type-Options"
+        ));
         
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
@@ -211,7 +237,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    // NOTE: No @Bean methods for CustomAuthenticationSuccessHandler and CustomAuthenticationFailureHandler
-    // because they are already @Component annotated and autowired above
 }
