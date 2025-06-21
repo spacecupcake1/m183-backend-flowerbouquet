@@ -84,8 +84,12 @@ public class SecurityConfig {
                 .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()
                 .requestMatchers("/images/**", "/css/**", "/js/**", "/assets/**").permitAll()
                 
-                // Authentication endpoints - public
-                .requestMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register").permitAll()
+                // Authentication endpoints - public (MUST BE BEFORE OTHER API ENDPOINTS)
+                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/api/users/**").permitAll() // Allow preflight requests
+                
+                // Authenticated endpoints
                 .requestMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/users/current").authenticated()
                 
@@ -135,22 +139,32 @@ public class SecurityConfig {
                 .addHeaderWriter(new XXssProtectionHeaderWriter())
             )
             
-            // Session management configuration
+            // Session management configuration for REST API
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .sessionFixation().migrateSession()
                 .maximumSessions(3)
                 .maxSessionsPreventsLogin(false)
-                .and()
-                .invalidSessionUrl("/login?expired=true")
             )
             
             // Authentication provider
             .authenticationProvider(authenticationProvider())
             
-            // Exception handling for REST API
+            // Exception handling for REST API - CRITICAL for proper JSON responses
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint((request, response, authException) -> {
+                    // Check if this is a registration or login request that should be allowed
+                    String requestURI = request.getRequestURI();
+                    String method = request.getMethod();
+                    
+                    // Don't send auth required for public endpoints
+                    if (("/api/users/register".equals(requestURI) && "POST".equals(method)) ||
+                        ("/api/users/login".equals(requestURI) && "POST".equals(method))) {
+                        // Let the request continue to the controller
+                        return;
+                    }
+                    
+                    // For other authenticated endpoints, return JSON error
                     response.setStatus(401);
                     response.setContentType("application/json");
                     response.setCharacterEncoding("UTF-8");
@@ -168,7 +182,6 @@ public class SecurityConfig {
     }
 
     /**
-     * CORS configuration for frontend-backend communication.
      * ENHANCED: More comprehensive CORS setup to fix preflight issues
      */
     @Bean
