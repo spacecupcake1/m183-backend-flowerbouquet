@@ -1,46 +1,136 @@
 package com.bbzbl.flowerbouquet.flower;
 
-import jakarta.validation.constraints.*;
-import lombok.Data;
-import org.hibernate.validator.constraints.URL;
+import java.math.BigDecimal;
+
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
- * Data Transfer Object for Flower with validation annotations.
+ * Simplified FlowerDTO for debugging validation issues
  */
-@Data
 public class FlowerDTO {
-    
+
     private Long id;
-    
+
     @NotBlank(message = "Flower name is required")
     @Size(min = 2, max = 100, message = "Flower name must be between 2 and 100 characters")
-    @Pattern(regexp = "^[a-zA-ZäöüÄÖÜß\\s\\-']+$", message = "Flower name can only contain letters, spaces, hyphens, and apostrophes")
     private String name;
-    
-    @NotBlank(message = "Flower meaning is required")
-    @Size(min = 5, max = 1000, message = "Flower meaning must be between 5 and 1000 characters")
+
+    @Size(max = 255, message = "Meaning must not exceed 255 characters")
     private String meaning;
-    
-    @NotBlank(message = "Availability status is required")
-    @Pattern(regexp = "^(Available|Unavailable)$", message = "Availability must be either 'Available' or 'Unavailable'")
-    private String availablity;
-    
-    @NotBlank(message = "Flower information is required")
-    @Size(min = 10, max = 1000, message = "Flower information must be between 10 and 1000 characters")
+
+    @NotBlank(message = "Availability is required")
+    private String availablity; // Note: keeping original spelling to match backend
+
+    @Size(max = 1000, message = "Info must not exceed 1000 characters")
     private String info;
-    
-    @NotBlank(message = "Flower color is required")
-    @Size(min = 2, max = 100, message = "Flower color must be between 2 and 100 characters")
-    @Pattern(regexp = "^[a-zA-ZäöüÄÖÜß\\s\\-]+$", message = "Flower color can only contain letters, spaces, and hyphens")
+
+    @NotBlank(message = "Color is required")
+    @Size(min = 2, max = 30, message = "Color must be between 2 and 30 characters")
     private String color;
-    
+
     @NotNull(message = "Price is required")
-    @Min(value = 1, message = "Price must be at least 1")
-    @Max(value = 9999, message = "Price cannot exceed 9999")
-    private Integer price;
-    
-    @NotBlank(message = "Image URL is required")
-    @Size(max = 500, message = "Image URL cannot exceed 500 characters")
-    @URL(message = "Image URL must be a valid URL")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
+    @DecimalMax(value = "9999.99", message = "Price must not exceed 9999.99")
+    private BigDecimal price;
+
+    @Size(max = 255, message = "Image URL must not exceed 255 characters")
     private String imageUrl;
+
+    // Default constructor
+    public FlowerDTO() {}
+
+    // Constructor with all fields
+    public FlowerDTO(String name, String meaning, String availablity, String info, 
+                    String color, BigDecimal price, String imageUrl) {
+        this.name = name;
+        this.meaning = meaning;
+        this.availablity = availablity;
+        this.info = info;
+        this.color = color;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    // Getters and setters with proper trimming
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name != null ? name.trim() : null;
+    }
+
+    public String getMeaning() {
+        return meaning;
+    }
+
+    public void setMeaning(String meaning) {
+        this.meaning = meaning != null ? meaning.trim() : null;
+    }
+
+    public String getAvailablity() {
+        return availablity;
+    }
+
+    public void setAvailablity(String availablity) {
+        this.availablity = availablity != null ? availablity.trim() : null;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info != null ? info.trim() : null;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color != null ? color.trim() : null;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl != null ? imageUrl.trim() : null;
+    }
+
+    @Override
+    public String toString() {
+        return "FlowerDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", meaning='" + meaning + '\'' +
+                ", availablity='" + availablity + '\'' +
+                ", info='" + info + '\'' +
+                ", color='" + color + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }
