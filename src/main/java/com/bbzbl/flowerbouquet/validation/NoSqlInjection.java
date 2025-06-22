@@ -12,9 +12,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 
-/**
- * Custom validation annotation to prevent SQL injection attacks
- */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NoSqlInjection.NoSqlInjectionValidator.class)
@@ -25,16 +22,14 @@ public @interface NoSqlInjection {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    /**
-     * Validator implementation for SQL injection detection
-     */
     class NoSqlInjectionValidator implements ConstraintValidator<NoSqlInjection, String> {
         
-        // Pattern to detect common SQL injection attempts
+        // FIXED: More targeted SQL injection detection - allows apostrophes and hyphens in names
         private static final Pattern SQL_INJECTION_PATTERN = Pattern.compile(
-            ".*('|(\\-\\-)|(;)|(\\|)|(\\*)|(%)|(\\bOR\\b)|(\\bAND\\b)|(\\bUNION\\b)|(\\bSELECT\\b)|" +
-            "(\\bINSERT\\b)|(\\bDELETE\\b)|(\\bUPDATE\\b)|(\\bDROP\\b)|(\\bCREATE\\b)|(\\bALTER\\b)|" +
-            "(\\bEXEC\\b)|(\\bEXECUTE\\b)|(\\bSP_\\w+)|(\\bXP_\\w+)|(\\b0x[0-9a-f]+)).*",
+            ".*(\\bDROP\\s+TABLE\\b|\\bDELETE\\s+FROM\\b|\\bINSERT\\s+INTO\\b|\\bUPDATE\\s+SET\\b|" +
+            "\\bUNION\\s+SELECT\\b|\\bSELECT\\s+\\*\\s+FROM\\b|\\bOR\\s+1\\s*=\\s*1\\b|" +
+            "\\bAND\\s+1\\s*=\\s*1\\b|;\\s*DROP\\b|;\\s*DELETE\\b|;\\s*INSERT\\b|" +
+            "\\bEXEC\\s*\\(|\\bEXECUTE\\s*\\(|\\bSP_\\w+|\\bXP_\\w+|\\b0x[0-9a-f]+).*",
             Pattern.CASE_INSENSITIVE
         );
 
@@ -45,7 +40,6 @@ public @interface NoSqlInjection {
 
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {
-            // Null values are considered valid (use @NotNull for null checks)
             if (value == null) {
                 return true;
             }
@@ -54,7 +48,6 @@ public @interface NoSqlInjection {
             boolean isValid = !SQL_INJECTION_PATTERN.matcher(value).matches();
             
             if (!isValid) {
-                // Log the security violation
                 System.err.println("SQL Injection attempt detected: " + value);
             }
             

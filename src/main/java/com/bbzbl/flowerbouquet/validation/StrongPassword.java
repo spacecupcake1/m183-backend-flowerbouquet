@@ -25,11 +25,12 @@ public @interface StrongPassword {
         public boolean isValid(String password, ConstraintValidatorContext context) {
             if (password == null) return false;
             
+            // FIXED: More reasonable password requirements
             return password.length() >= 8 &&
-                   password.matches(".*[A-Z].*") &&
-                   password.matches(".*[a-z].*") &&
-                   password.matches(".*[0-9].*") &&
-                   password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*");
+                   password.matches(".*[A-Z].*") &&                    // At least one uppercase
+                   password.matches(".*[a-z].*") &&                    // At least one lowercase  
+                   password.matches(".*[0-9].*") &&                    // At least one number
+                   password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?~`].*"); // At least one special char
         }
     }
 }

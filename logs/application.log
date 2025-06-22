@@ -6971,3 +6971,278 @@ java.io.StreamCorruptedException: invalid type code: 00
 2025-06-22 14:11:30.683 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
 2025-06-22 14:11:30.687 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 0.855 seconds (process running for 1555.436)
 2025-06-22 14:11:31.056 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:33:59.859 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-06-22 14:33:59.864 [Thread-40] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:33:59.887 [Thread-40] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:33:59.889 [Thread-40] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-22 14:33:59.890 [Thread-40] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown initiated...
+2025-06-22 14:33:59.892 [Thread-40] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown completed.
+2025-06-22 14:34:00.046 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 27264 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:34:00.047 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:34:00.217 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:34:00.243 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 25 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:34:00.331 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:34:00.335 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:34:00.375 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:34:00.376 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:34:00.377 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:34:00.378 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:34:00.401 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:34:00.401 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 352 ms
+2025-06-22 14:34:00.413 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Starting...
+2025-06-22 14:34:00.414 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-11 - Added connection conn23: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:34:00.415 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Start completed.
+2025-06-22 14:34:00.415 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:34:00.441 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:34:00.443 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:34:00.444 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:34:00.445 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.000s)
+2025-06-22 14:34:00.446 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:34:00.447 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:34:00.451 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:34:00.452 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:34:00.467 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:34:00.469 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:34:00.475 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:34:00.477 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:34:00.563 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:34:00.571 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:34:00.850 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:34:00.857 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:34:00.863 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:34:00.866 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 0.882 seconds (process running for 2905.603)
+2025-06-22 14:34:01.278 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:37:06.589 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-06-22 14:37:06.592 [Thread-44] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:37:06.612 [Thread-44] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:37:06.613 [Thread-44] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-22 14:37:06.614 [Thread-44] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Shutdown initiated...
+2025-06-22 14:37:06.615 [Thread-44] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Shutdown completed.
+2025-06-22 14:37:06.731 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 27264 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:37:06.732 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:37:06.922 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:37:06.937 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:37:07.005 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:37:07.009 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:37:07.042 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:37:07.043 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:37:07.044 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:37:07.044 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:37:07.060 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:37:07.061 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 327 ms
+2025-06-22 14:37:07.068 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Starting...
+2025-06-22 14:37:07.070 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-12 - Added connection conn25: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:37:07.071 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Start completed.
+2025-06-22 14:37:07.071 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:37:07.101 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:37:07.103 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:37:07.104 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:37:07.105 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.000s)
+2025-06-22 14:37:07.105 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:37:07.107 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:37:07.112 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:37:07.112 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:37:07.127 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:37:07.130 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:37:07.135 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:37:07.137 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:37:07.208 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:37:07.215 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:37:07.525 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:37:07.531 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:37:07.538 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:37:07.542 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 0.853 seconds (process running for 3092.278)
+2025-06-22 14:37:07.890 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:39:46.904 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2025-06-22 14:39:46.910 [Thread-48] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:39:46.934 [Thread-48] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:39:46.936 [Thread-48] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-22 14:39:46.937 [Thread-48] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Shutdown initiated...
+2025-06-22 14:39:46.938 [Thread-48] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Shutdown completed.
+2025-06-22 14:39:47.046 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 27264 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:39:47.046 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:39:47.181 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:39:47.192 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:39:47.250 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:39:47.253 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:39:47.306 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:39:47.310 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:39:47.310 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:39:47.311 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:39:47.349 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:39:47.357 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 309 ms
+2025-06-22 14:39:47.382 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Starting...
+2025-06-22 14:39:47.387 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-13 - Added connection conn27: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:39:47.387 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Start completed.
+2025-06-22 14:39:47.388 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:39:47.440 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:39:47.443 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:39:47.445 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:39:47.446 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.000s)
+2025-06-22 14:39:47.446 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:39:47.448 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:39:47.469 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:39:47.472 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:39:47.496 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:39:47.501 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:39:47.513 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:39:47.518 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:39:47.611 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:39:47.622 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:39:48.105 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:39:48.114 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:39:48.122 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:39:48.126 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 1.112 seconds (process running for 3252.864)
+2025-06-22 14:39:48.564 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:40:57.855 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2025-06-22 14:40:57.859 [Thread-52] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:40:57.876 [Thread-52] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:40:57.877 [Thread-52] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-22 14:40:57.877 [Thread-52] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown initiated...
+2025-06-22 14:40:57.878 [Thread-52] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown completed.
+2025-06-22 14:40:57.986 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 27264 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:40:57.987 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:40:58.242 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:40:58.293 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:40:58.355 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:40:58.359 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:40:58.407 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:40:58.408 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:40:58.409 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:40:58.409 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:40:58.428 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:40:58.429 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 440 ms
+2025-06-22 14:40:58.441 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Starting...
+2025-06-22 14:40:58.444 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-14 - Added connection conn29: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:40:58.445 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Start completed.
+2025-06-22 14:40:58.445 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:40:58.478 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:40:58.479 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:40:58.481 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:40:58.481 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.000s)
+2025-06-22 14:40:58.482 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:40:58.483 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:40:58.486 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:40:58.487 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:40:58.498 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:40:58.500 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:40:58.503 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:40:58.504 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:40:58.553 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:40:58.559 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:40:58.885 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:40:58.891 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:40:58.899 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:40:58.903 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 0.944 seconds (process running for 3323.64)
+2025-06-22 14:40:59.252 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:41:34.293 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2025-06-22 14:41:34.295 [Thread-56] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:41:34.316 [Thread-56] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:41:34.318 [Thread-56] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-22 14:41:34.318 [Thread-56] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Shutdown initiated...
+2025-06-22 14:41:34.319 [Thread-56] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Shutdown completed.
+2025-06-22 14:41:34.441 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 27264 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:41:34.441 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:41:34.620 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:41:34.635 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:41:34.697 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:41:34.701 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:41:34.731 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:41:34.731 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:41:34.732 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:41:34.732 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:41:34.752 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:41:34.752 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 309 ms
+2025-06-22 14:41:34.763 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Starting...
+2025-06-22 14:41:34.765 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-15 - Added connection conn31: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:41:34.765 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Start completed.
+2025-06-22 14:41:34.766 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:41:34.797 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:41:34.799 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:41:34.800 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:41:34.801 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.000s)
+2025-06-22 14:41:34.801 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:41:34.803 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:41:34.807 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:41:34.808 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:41:34.817 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:41:34.819 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:41:34.823 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:41:34.824 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:41:34.885 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:41:34.894 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:41:35.140 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:41:35.145 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:41:35.150 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:41:35.154 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 0.752 seconds (process running for 3359.891)
+2025-06-22 14:41:35.472 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-06-22 14:42:14.758 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2025-06-22 14:42:14.818 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Starting FlowerbouquetApplication using Java 17.0.15 with PID 21108 (C:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet\target\classes started by jegathr1 in c:\Users\jegathr1\Desktop\School\m183-backend-flowerbouquet)
+2025-06-22 14:42:14.820 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - The following 1 profile is active: "dev"
+2025-06-22 14:42:14.896 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-22 14:42:14.896 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-22 14:42:15.935 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-22 14:42:16.021 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 75 ms. Found 3 JPA repository interfaces.
+2025-06-22 14:42:16.434 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validationConfig' of type [com.bbzbl.flowerbouquet.validation.ValidationConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-06-22 14:42:16.447 [restartedMain] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'validator' of type [org.springframework.validation.beanvalidation.LocalValidatorFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [methodValidationPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-06-22 14:42:16.971 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-06-22 14:42:16.983 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:42:16.986 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-22 14:42:16.988 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.20]
+2025-06-22 14:42:17.070 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-22 14:42:17.072 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2175 ms
+2025-06-22 14:42:17.123 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-22 14:42:17.338 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:flowershop user=SA
+2025-06-22 14:42:17.341 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-22 14:42:17.352 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:flowershop'
+2025-06-22 14:42:17.623 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+2025-06-22 14:42:17.623 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+2025-06-22 14:42:17.624 [restartedMain] INFO  o.f.c.i.license.VersionPrinter - 
+2025-06-22 14:42:17.674 [restartedMain] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:flowershop (H2 2.2)
+2025-06-22 14:42:17.681 [restartedMain] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-06-22 14:42:17.700 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2025-06-22 14:42:17.702 [restartedMain] INFO  o.f.core.internal.command.DbValidate - Successfully validated 0 migrations (execution time 00:00.007s)
+2025-06-22 14:42:17.703 [restartedMain] WARN  o.f.core.internal.command.DbValidate - No migrations found. Are your locations set up correctly?
+2025-06-22 14:42:17.713 [restartedMain] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2025-06-22 14:42:17.748 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2025-06-22 14:42:17.753 [restartedMain] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-06-22 14:42:17.867 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-22 14:42:17.950 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-06-22 14:42:18.001 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-06-22 14:42:18.303 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-22 14:42:18.367 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-06-22 14:42:19.724 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-22 14:42:19.778 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-22 14:42:20.172 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-22 14:42:22.782 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-22 14:42:22.824 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2025-06-22 14:42:22.864 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-06-22 14:42:22.890 [restartedMain] INFO  c.b.f.FlowerbouquetApplication - Started FlowerbouquetApplication in 8.722 seconds (process running for 9.576)
+2025-06-22 14:44:01.691 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-22 14:44:01.694 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-06-22 14:44:01.697 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-06-22 14:44:02.138 [http-nio-8080-exec-2] INFO  SECURITY - Registration attempt for username 'demo' from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:44:02.971 [http-nio-8080-exec-2] INFO  SECURITY - User 'demo' registered successfully from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:44:16.083 [http-nio-8080-exec-4] INFO  SECURITY - Login attempt for user 'demo' from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:44:18.103 [http-nio-8080-exec-4] WARN  o.a.c.util.SessionIdGeneratorBase - Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [226] milliseconds.
+2025-06-22 14:44:18.119 [http-nio-8080-exec-4] INFO  SECURITY - User 'demo' logged in successfully from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:44:19.751 [http-nio-8080-exec-6] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:19.7435594"}
+2025-06-22 14:44:23.047 [http-nio-8080-exec-8] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"16","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:23.0461698"}
+2025-06-22 14:44:29.241 [http-nio-8080-exec-10] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:29.2416331"}
+2025-06-22 14:44:31.801 [http-nio-8080-exec-2] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"17","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:31.801361"}
+2025-06-22 14:44:50.088 [http-nio-8080-exec-4] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:50.0888036"}
+2025-06-22 14:44:53.284 [http-nio-8080-exec-6] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"6","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:53.283727"}
+2025-06-22 14:44:58.975 [http-nio-8080-exec-8] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:44:58.9759263"}
+2025-06-22 14:45:01.095 [http-nio-8080-exec-10] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"5","eventType":"DATA_ACCESS","operation":"READ","username":"demo","timestamp":"2025-06-22T14:45:01.0948957"}
+2025-06-22 14:46:10.137 [http-nio-8080-exec-4] INFO  SECURITY - User 'demo' logged out from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:46:22.619 [http-nio-8080-exec-6] INFO  SECURITY - Login attempt for user 'admin' from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:46:23.354 [http-nio-8080-exec-6] INFO  SECURITY - User 'admin' logged in successfully from IP: 0:0:0:0:0:0:0:1
+2025-06-22 14:46:24.904 [http-nio-8080-exec-8] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:46:24.9037161"}
+2025-06-22 14:46:33.617 [http-nio-8080-exec-2] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:46:33.6179883"}
+2025-06-22 14:46:33.628 [http-nio-8080-exec-4] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:46:33.6285218"}
+2025-06-22 14:46:56.847 [http-nio-8080-exec-6] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"21","eventType":"DATA_ACCESS","operation":"CREATE","username":"admin","timestamp":"2025-06-22T14:46:56.8474955"}
+2025-06-22 14:46:56.875 [http-nio-8080-exec-8] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:46:56.8752482"}
+2025-06-22 14:47:05.991 [http-nio-8080-exec-10] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"21","eventType":"DATA_ACCESS","operation":"UPDATE","username":"admin","timestamp":"2025-06-22T14:47:05.9916577"}
+2025-06-22 14:47:06.013 [http-nio-8080-exec-3] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:47:06.0136846"}
+2025-06-22 14:47:09.959 [http-nio-8080-exec-4] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"21","eventType":"DATA_ACCESS","operation":"DELETE","username":"admin","timestamp":"2025-06-22T14:47:09.9598145"}
+2025-06-22 14:47:10.080 [http-nio-8080-exec-6] INFO  SECURITY_AUDIT - DATA_ACCESS: {"entityType":"Flower","success":true,"ipAddress":"0:0:0:0:0:0:0:1","entityId":"ALL","eventType":"DATA_ACCESS","operation":"READ","username":"admin","timestamp":"2025-06-22T14:47:10.0799642"}

@@ -276,16 +276,17 @@ public class FlowerController {
      * Convert FlowerDTO to Flower entity
      */
     private Flower convertDtoToEntity(FlowerDTO flowerDTO) {
-        Flower flower = new Flower();
-        flower.setName(flowerDTO.getName());
-        flower.setMeaning(flowerDTO.getMeaning());
-        flower.setAvailablity(flowerDTO.getAvailablity()); // Note: keeping original spelling
-        flower.setInfo(flowerDTO.getInfo());
-        flower.setColor(flowerDTO.getColor());
-        flower.setPrice(flowerDTO.getPrice().intValue()); // Convert BigDecimal to int if needed
-        flower.setImageUrl(flowerDTO.getImageUrl());
-        return flower;
-    }
+    Flower flower = new Flower();
+    flower.setName(flowerDTO.getName());
+    flower.setMeaning(flowerDTO.getMeaning());
+    flower.setAvailablity(flowerDTO.getAvailability());
+    // flower.setAvailability(flowerDTO.getAvailability());
+    flower.setInfo(flowerDTO.getInfo());
+    flower.setColor(flowerDTO.getColor());
+    flower.setPrice(flowerDTO.getPrice().intValue()); // Convert BigDecimal to int if needed
+    flower.setImageUrl(flowerDTO.getImageUrl());
+    return flower;
+}
 
     /**
      * Additional server-side validation for flower DTOs

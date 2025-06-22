@@ -2,14 +2,18 @@ package com.bbzbl.flowerbouquet.flower;
 
 import java.math.BigDecimal;
 
+import com.bbzbl.flowerbouquet.validation.NoSqlInjection;
+import com.bbzbl.flowerbouquet.validation.NoXSS;
+
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * Simplified FlowerDTO for debugging validation issues
+ * Fixed FlowerDTO with correct field names and relaxed validation
  */
 public class FlowerDTO {
 
@@ -17,19 +21,30 @@ public class FlowerDTO {
 
     @NotBlank(message = "Flower name is required")
     @Size(min = 2, max = 100, message = "Flower name must be between 2 and 100 characters")
+    @Pattern(regexp = "^[a-zA-ZäöüÄÖÜß0-9\\s\\-'.,()]+$", message = "Flower name contains invalid characters")
+    @NoSqlInjection
+    @NoXSS
     private String name;
 
-    @Size(max = 255, message = "Meaning must not exceed 255 characters")
+    @Size(max = 1000, message = "Meaning must not exceed 1000 characters")
+    @NoSqlInjection
+    @NoXSS
     private String meaning;
 
     @NotBlank(message = "Availability is required")
-    private String availablity; // Note: keeping original spelling to match backend
+    @Pattern(regexp = "^(Available|Unavailable)$", message = "Availability must be either 'Available' or 'Unavailable'")
+    private String availability; // FIXED: Changed from 'availablity' to 'availability'
 
     @Size(max = 1000, message = "Info must not exceed 1000 characters")
+    @NoSqlInjection
+    @NoXSS
     private String info;
 
     @NotBlank(message = "Color is required")
-    @Size(min = 2, max = 30, message = "Color must be between 2 and 30 characters")
+    @Size(min = 2, max = 50, message = "Color must be between 2 and 50 characters")
+    @Pattern(regexp = "^[a-zA-ZäöüÄÖÜß\\s\\-,]+$", message = "Color contains invalid characters")
+    @NoSqlInjection
+    @NoXSS
     private String color;
 
     @NotNull(message = "Price is required")
@@ -37,18 +52,18 @@ public class FlowerDTO {
     @DecimalMax(value = "9999.99", message = "Price must not exceed 9999.99")
     private BigDecimal price;
 
-    @Size(max = 255, message = "Image URL must not exceed 255 characters")
+    @Size(max = 500, message = "Image URL must not exceed 500 characters")
     private String imageUrl;
 
     // Default constructor
     public FlowerDTO() {}
 
     // Constructor with all fields
-    public FlowerDTO(String name, String meaning, String availablity, String info, 
+    public FlowerDTO(String name, String meaning, String availability, String info, 
                     String color, BigDecimal price, String imageUrl) {
         this.name = name;
         this.meaning = meaning;
-        this.availablity = availablity;
+        this.availability = availability; // FIXED
         this.info = info;
         this.color = color;
         this.price = price;
@@ -80,12 +95,23 @@ public class FlowerDTO {
         this.meaning = meaning != null ? meaning.trim() : null;
     }
 
-    public String getAvailablity() {
-        return availablity;
+    public String getAvailability() { // FIXED method name
+        return availability;
     }
 
+    public void setAvailability(String availability) { // FIXED method name and parameter
+        this.availability = availability != null ? availability.trim() : null;
+    }
+
+    // DEPRECATED: Keep for backward compatibility, remove after testing
+    @Deprecated
+    public String getAvailablity() {
+        return availability;
+    }
+
+    @Deprecated
     public void setAvailablity(String availablity) {
-        this.availablity = availablity != null ? availablity.trim() : null;
+        this.availability = availablity != null ? availablity.trim() : null;
     }
 
     public String getInfo() {
@@ -118,19 +144,5 @@ public class FlowerDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl != null ? imageUrl.trim() : null;
-    }
-
-    @Override
-    public String toString() {
-        return "FlowerDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", meaning='" + meaning + '\'' +
-                ", availablity='" + availablity + '\'' +
-                ", info='" + info + '\'' +
-                ", color='" + color + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
     }
 }
