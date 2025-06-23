@@ -22,8 +22,13 @@ public @interface NoXSS {
     Class<? extends Payload>[] payload() default {};
 
     class NoXSSValidator implements ConstraintValidator<NoXSS, String> {
+        
+        // FIXED: More targeted XSS detection - allows normal text content
         private static final Pattern XSS_PATTERN = Pattern.compile(
-            ".*(<script|javascript:|on\\w+\\s*=|<iframe|<object|<embed|<form|<input|<meta|<link).*",
+            ".*(<script[^>]*>.*?</script>|<script[^>]*/>|javascript:\\s*|vbscript:\\s*|" +
+            "on(load|error|click|mouseover|focus|blur|change|submit)\\s*=|" +
+            "<iframe[^>]*>|<object[^>]*>|<embed[^>]*>|<applet[^>]*>|" +
+            "expression\\s*\\(|url\\s*\\(\\s*['\"]?javascript:|data:\\s*text/html).*",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL
         );
 
